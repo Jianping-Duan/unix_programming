@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-3-Clause
  *
- * Copyright (c) 2024, 2025 Jianping Duan <static.integer@hotmail.com>
+ * Copyright (c) 2025 Jianping Duan <static.integer@hotmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -77,6 +77,9 @@
 /* Value must be > 0 */
 #define GN_GT_0         02
 
+/* The error message string corresponding to an error number. */
+#define ERR_MSG		strerror(errno)
+
 static inline void
 errmsg_exit1(const char *fmt, ...)
 {
@@ -140,7 +143,7 @@ xmalloc(size_t sz)
 	void *ptr;
 
 	if ((ptr = malloc(sz)) == NULL)
-		errmsg_exit1("Memory allocated failure, %s\n", strerror(errno));
+		errmsg_exit1("Memory allocated failure, %s\n", ERR_MSG);
 
 	return ptr;
 }

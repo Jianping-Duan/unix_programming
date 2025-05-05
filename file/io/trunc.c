@@ -38,7 +38,7 @@ main(int argc, char *argv[])
 		errmsg_exit1("Usage: %s <file> <bytes>\n", argv[0]);
 
 	if (truncate(argv[1], getlong(argv[2], GN_ANY_BASE)) != 0)
-		errmsg_exit1("truncate error, %s.\n", strerror(errno));
+		errmsg_exit1("truncate error, %s.\n", ERR_MSG);
 
 	return 0;
 }

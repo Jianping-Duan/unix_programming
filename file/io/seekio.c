@@ -51,7 +51,7 @@ main(int argc, char *argv[])
 	oflags = O_RDWR | O_CREAT;
 	fperms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
 	if ((fd = open(argv[1], oflags, fperms)) == -1)
-		errmsg_exit1("open file '%s' error, %s.\n", argv[1], strerror(errno));
+		errmsg_exit1("open file '%s' error, %s.\n", argv[1], ERR_MSG);
 
 	for (i = 2; i < argc; i++) {
 		switch (argv[i][0]) {
@@ -66,7 +66,7 @@ main(int argc, char *argv[])
 				len = getlong(&argv[i][1], GN_ANY_BASE);
 				buf = xmalloc(len);
 				if ((nrd = read(fd, buf, len)) == -1)
-					errmsg_exit1("read error, %s.\n", strerror(errno));
+					errmsg_exit1("read error, %s.\n", ERR_MSG);
 				if (nrd == 0)
 					printf("%s: end-of-file.\n", argv[i]);
 				else {
@@ -84,13 +84,13 @@ main(int argc, char *argv[])
 				break;
 			case 'w':	/* write string at current offset. */
 				if ((nwr = write(fd, &argv[i][1], strlen(&argv[i][1]))) == -1)
-					errmsg_exit1("write error, %s.\n", strerror(errno));
+					errmsg_exit1("write error, %s.\n", ERR_MSG);
 				printf("%s: wrote %ld bytes.\n", argv[i], nwr);
 				break;
 			case 's':	/* change file offset. */
 				offset = getlong(&argv[i][1], GN_ANY_BASE);
 				if (lseek(fd, offset, SEEK_SET) == -1)
-					errmsg_exit1("lseek error, %s.\n", strerror(errno));
+					errmsg_exit1("lseek error, %s.\n", ERR_MSG);
 				printf("%s: seek succeeded.\n", argv[i]);
 				break;
 			default:
@@ -99,7 +99,7 @@ main(int argc, char *argv[])
 	}
 
 	if (close(fd) == -1)
-		errmsg_exit1("close file failure, %s\n", strerror(errno));
+		errmsg_exit1("close file failure, %s\n", ERR_MSG);
 
 	return 0;
 }

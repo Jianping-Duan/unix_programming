@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 
 	/* opens the input file in read-only mode. */
 	if ((infd = open(argv[1], O_RDONLY)) == -1)
-		errmsg_exit1("open file %s failed, %s\n", argv[1], strerror(errno));
+		errmsg_exit1("open file %s failed, %s\n", argv[1], ERR_MSG);
 
 	/* 
 	 * open the output file in 'rw-rw-rw-' mode.
@@ -56,7 +56,7 @@ main(int argc, char *argv[])
 	oflags = O_CREAT | O_WRONLY | O_TRUNC;
 	fperms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
 	if ((outfd = open(argv[2], oflags, fperms)) == -1)
-		errmsg_exit1("open file %s failed, %s\n", argv[1], strerror(errno));
+		errmsg_exit1("open file %s failed, %s\n", argv[1], ERR_MSG);
 
 	/* transfer data until we encounter end of input file or an error. */
 	while ((nrd = read(infd, buf, BUF_SIZE)) > 0)
@@ -69,9 +69,9 @@ main(int argc, char *argv[])
 	 * close intput file and output file.
 	 */
 	if (close(infd) == -1)
-		errmsg_exit1("close input file failure, %s\n", strerror(errno));
+		errmsg_exit1("close input file failure, %s\n", ERR_MSG);
 	if (close(outfd) == -1)
-		errmsg_exit1("close output file failure, %s\n", strerror(errno));
+		errmsg_exit1("close output file failure, %s\n", ERR_MSG);
 	
 	return 0;
 }

@@ -86,7 +86,7 @@ main(int argc, char *argv[])
 	oflags = O_RDWR | O_CREAT | O_TRUNC;
 	fperms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
 	if ((fd = open(fname, oflags, fperms)) == -1)
-		errmsg_exit1("open file %s error, %s.\n", fname, strerror(errno));
+		errmsg_exit1("open file %s error, %s.\n", fname, ERR_MSG);
 
 	/* integer number */
 	iow[0].iov_base = &num;
@@ -103,18 +103,18 @@ main(int argc, char *argv[])
 	iow[2].iov_len = STRLEN;
 
 	if ((nwr = writev(fd, iow, IOVSZ)) == -1)
-		errmsg_exit1("writev error, %s.\n", strerror(errno));
+		errmsg_exit1("writev error, %s.\n", ERR_MSG);
 	printf("Wrote %ld bytes.\n", nwr);
 
 	if (close(fd) == -1)
-		errmsg_exit1("close file error, %s\n", strerror(errno));
+		errmsg_exit1("close file error, %s\n", ERR_MSG);
 
 	/*
 	 * open file for read.
 	 */
 	oflags = O_RDONLY;
 	if ((fd = open(fname, oflags)) == -1)
-		errmsg_exit1("open file %s error, %s.\n", fname, strerror(errno));
+		errmsg_exit1("open file %s error, %s.\n", fname, ERR_MSG);
 
 	memset(&num, 0, sizeof(num));
 	ior[0].iov_base = &num;
@@ -128,7 +128,7 @@ main(int argc, char *argv[])
 	ior[2].iov_len = STRLEN;
 
 	if ((nrd = readv(fd, ior, IOVSZ)) == -1)
-		errmsg_exit1("readv error, %s.\n", strerror(errno));
+		errmsg_exit1("readv error, %s.\n", ERR_MSG);
 	printf("Readed %ld bytes.\n", nrd);
 	
 	printf("Integer number: %d\n", num);
@@ -138,7 +138,7 @@ main(int argc, char *argv[])
 	printf("String: %s\n", str2);
 
 	if (close(fd) == -1)
-		errmsg_exit1("close file error, %s\n", strerror(errno));
+		errmsg_exit1("close file error, %s\n", ERR_MSG);
 
 	exit(EXIT_SUCCESS);
 }
