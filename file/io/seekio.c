@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-3-Clause
  *
- * Copyright (c) 2024, 2025 Jianping Duan <static.integer@hotmail.com>
+ * Copyright (c) 2025 Jianping Duan <static.integer@hotmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
