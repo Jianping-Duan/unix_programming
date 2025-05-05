@@ -98,5 +98,8 @@ main(int argc, char *argv[])
 		}
 	}
 
+	if (close(fd) == -1)
+		errmsg_exit1("close file failure, %s\n", strerror(errno));
+
 	return 0;
 }
