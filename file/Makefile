@@ -1,3 +1,3 @@
-SUBDIRS = io
+SUBDIRS = io attr
 
 .include "../man2dirs.mk"
