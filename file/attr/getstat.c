@@ -113,11 +113,10 @@ display_statinfo(const struct stat *st)
 }
 
 /* Return ls(1)-style string for file permissions mask */
-static
-char * file_perms(mode_t perm, int flags)
+static char *
+file_perms(mode_t perm, int flags)
 {
 	static char permstr[10];
-
 /* 
  * Include set-user-ID, set-group-ID, and sticky
  * bit information in returned string.
