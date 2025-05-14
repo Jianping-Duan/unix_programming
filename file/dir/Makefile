@@ -1,6 +1,6 @@
 # DEBUG = -O0 -g
 
 TOPDIR = ../..
-EXECS = lsfiles
+EXECS = lsfiles vsymlink
 
 .include "$(TOPDIR)/bsdman2.mk"
