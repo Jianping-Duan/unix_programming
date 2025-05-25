@@ -137,6 +137,17 @@ getlong(const char *arg, int flags)
 	return ret;
 }
 
+static inline int
+getint(const char *arg)
+{
+	long val = getlong(arg, GN_ANY_BASE);
+
+	if (val > INT_MAX || val < INT_MIN)
+		errmsg_exit1("Integer out of range, %ld\n", val);
+
+	return (int)val;
+}
+
 static inline void *
 xmalloc(size_t sz)
 {
