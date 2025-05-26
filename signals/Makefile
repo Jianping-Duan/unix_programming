@@ -2,6 +2,6 @@
 CFLAGS_AUX = -lcrypt
 TOPDIR = ..
 EXECS = intquit mykill sigsender sigreceiver ignore_pending_sig sigjmp \
-	sigaltstack
+	sigaltstack sigqueue catch_rtsigs
 
 .include "$(TOPDIR)/bsdman2.mk"
