@@ -1,6 +1,6 @@
 # DEBUG = -O0 -g
 
 TOPDIR = ../..
-EXECS = fork fork_file_sharing
+EXECS = fork fork_file_sharing footprint
 
 .include "$(TOPDIR)/bsdman2.mk"
