@@ -1,3 +1,3 @@
-SUBDIRS = creation
+SUBDIRS = creation termination
 
 .include "../man2dirs.mk"
