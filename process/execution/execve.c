@@ -37,7 +37,7 @@ main(int argc, char *argv[])
 	char *argvec[10];
 	char *envvec[] = { "MYENV1=test01", "MYENV2=test02", NULL };
 
-	if (argc != 2 && strcmp(argv[0], "--help") == 0)
+	if (argc != 2 || strcmp(argv[1], "--help") == 0)
 		errmsg_exit1("Usage: %s pathname\n", argv[0]);
 
 	/* Create an argument list for the new program */
@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 	else
 		argvec[0] = argv[1];
 	argvec[1] = "hello world";
-	argvec[2] = "goodbye"
+	argvec[2] = "goodbye";
 	argvec[3] = NULL;
 
 	/* Execute the program specified in argv[1] */
