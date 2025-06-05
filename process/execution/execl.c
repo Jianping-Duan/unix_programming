@@ -32,24 +32,12 @@
 #include "unibsd.h"
 
 int
-main(int argc, char *argv[])
+main(void)
 {
-	char *argvec[10];
-	char *envvec[] = { "MYENV1=test01", "MYENV2=test02", NULL };
+	printf("Initial value of VALUE: %s\n", getenv("USER"));
+	if (putenv("USER=Jianping") != 0)
+		errmsg_exit1("putenv failed, %s\n", ERR_MSG); 
 
-	if (argc != 2 || strcmp(argv[1], "--help") == 0)
-		errmsg_exit1("Usage: %s pathname\n", argv[0]);
-
-	/* Create an argument list for the new program */
-	if ((argvec[0] = strrchr(argv[1], '/')) != NULL)
-		argvec[0]++;
-	else
-		argvec[0] = argv[1];
-	argvec[1] = "hello world";
-	argvec[2] = "goodbye";
-	argvec[3] = NULL;
-
-	/* Execute the program specified in argv[1] */
-	if (execve(argv[1], argvec, envvec) == -1)	/* more details see execve(3) */
-		errmsg_exit1("execve failed, %s\n", ERR_MSG);
+	execl("/usr/bin/printenv", "printenv", "USER", "SHELL", (char *)NULL);
+	errmsg_exit1("execl failed, %s\n", ERR_MSG);
 }

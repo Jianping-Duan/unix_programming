@@ -34,22 +34,12 @@
 int
 main(int argc, char *argv[])
 {
-	char *argvec[10];
-	char *envvec[] = { "MYENV1=test01", "MYENV2=test02", NULL };
-
 	if (argc != 2 || strcmp(argv[1], "--help") == 0)
 		errmsg_exit1("Usage: %s pathname\n", argv[0]);
 
-	/* Create an argument list for the new program */
-	if ((argvec[0] = strrchr(argv[1], '/')) != NULL)
-		argvec[0]++;
-	else
-		argvec[0] = argv[1];
-	argvec[1] = "hello world";
-	argvec[2] = "goodbye";
-	argvec[3] = NULL;
-
-	/* Execute the program specified in argv[1] */
-	if (execve(argv[1], argvec, envvec) == -1)	/* more details see execve(3) */
-		errmsg_exit1("execve failed, %s\n", ERR_MSG);
+	/* more details see execlp(3) */
+	if (execlp(argv[1], argv[1], "Hello World", (char *)NULL) == -1)
+		errmsg_exit1("execlp failed, %s\n", ERR_MSG);
+	
+	exit(EXIT_SUCCESS);
 }
