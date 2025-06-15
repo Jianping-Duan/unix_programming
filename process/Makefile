@@ -1,4 +1,4 @@
 SUBDIRS = creation termination monchildproc execution grpsess jobcntl daemon \
-	priosched
+	priosched resource
 
 .include "../man2dirs.mk"
