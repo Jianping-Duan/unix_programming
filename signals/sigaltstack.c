@@ -46,13 +46,13 @@ main(void)
 	printf("Top of standard stack is near %10p\n", (void *)&noinit);
 
 	/*
-	 * If SS_DISABLE is set in ss_flags, ss_sp and ss_size are ignored and the
-	 * signal stack will be disabled.  A disabled stack will cause all signals
-	 * to be taken on the regular user stack.  If the stack is later re-enabled
-	 * then all signals that were specified to be processed on an alternate
-	 * stack will resume doing so.
+	 * If SS_DISABLE is set in ss_flags, ss_sp and ss_size are ignored and
+	 * the signal stack will be disabled.  A disabled stack will cause all
+	 * signals to be taken on the regular user stack.  If the stack is later
+	 * re-enabled then all signals that were specified to be processed on an
+	 * alternate stack will resume doing so.
 	 *
-	 * If oss is non-zero, the current signal stack state is returned.  The
+	 * If oss is non-zero, the current signal stack state is returned. The
 	 * ss_flags field will contain the value SS_ONSTACK if the thread is
 	 * currently on a signal stack and SS_DISABLE if the signal stack is
 	 * currently disabled.
@@ -65,13 +65,13 @@ main(void)
 		errmsg_exit1("sigaltstack failed, %s\n", ERR_MSG);
 
 	/*
-	 * The sbrk() function raises the break by incr bytes, thus allocating at
-	 * least incr bytes of new memory in the data segment.
+	 * The sbrk() function raises the break by incr bytes, thus allocating
+	 * at least incr bytes of new memory in the data segment.
 	 * If incr is negative, the break is lowered by incr bytes.
 	 *
-	 * sbrk() is sometimes used to monitor heap use by calling with an argument
-	 * of 0. The result is unlikely to reflect actual utilization in 
-	 * combination with an mmap(2) based malloc.
+	 * sbrk() is sometimes used to monitor heap use by calling with an
+	 * argument of 0. The result is unlikely to reflect actual utilization
+	 * in combination with an mmap(2) based malloc.
 	 */
 	if ((heapused = sbrk(0)) == (void *)-1)
 		errmsg_exit1("sbrk(0) failed, %s\n", ERR_MSG);
@@ -103,7 +103,7 @@ sigsegv_handler(int sig)
 #ifdef __clang__
 #pragma clang diagnostic ignored "-Winfinite-recursion"
 #elif defined(__GCC__)
-#pragma clang diagnostic ignored "-Winfinite-recursion"
+#pragma GCC diagnostic ignored "-Winfinite-recursion"
 #endif
 static _Noreturn void
 overflow_stack(int callnum)

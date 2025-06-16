@@ -52,31 +52,34 @@ main(int argc, char *argv[])
 
 	if (argc < 2) {
 		errmsg_exit1("Usage: %s suspend-method [sleep-time]\n"
-			"\t0: sigprocmask() + pause(); 1: sigsuspend()\n", argv[0]);
+			"\t0: sigprocmask() + pause(); 1: sigsuspend()\n",
+			argv[0]);
 	}
 	
 	flag = getint(argv[1]);
 	if (flag != USE_PAUSE && flag != USE_SUSPEND) {
 		fprintf(stderr, "Invalid argument, %s\n", argv[1]);
 		errmsg_exit1("Usage: %s suspend-method\n"
-			"\t0: sigprocmask() + pause(); 1: sigsuspend()\n", argv[0]);
+			"\t0: sigprocmask() + pause(); 1: sigsuspend()\n",
+			argv[0]);
 	}
 
 	pause_suspend = (flag == 0) ? USE_PAUSE : USE_SUSPEND;
 	if (pause_suspend == USE_PAUSE && argc < 3)
-		errmsg_exit1("Using sigprocmask() + pause() must be specify the "
-			"sleep-time.\n");
+		errmsg_exit1("Using sigprocmask() + pause() must be specify "
+			"the sleep-time.\n");
 	
 	if (argc >= 3 && pause_suspend == USE_PAUSE)
 		if ((sleep_time = getint(argv[2])) <= 0)
-			errmsg_exit1("Argument sleep-time must be greater than 0\n");
+			errmsg_exit1("Argument sleep-time must be greater "
+				"than 0\n");
 
 	print_sigmask("Initial signal mask is:\n");
 
 	/* 
 	 * Block SIGINT and SIGQUIT - at this point we assume that these signals
-	 * are not already blocked (obviously true in this simple program) so that
-	 * 'omask' will not contain either of these signals after the call.
+	 * are not already blocked (obviously true in this simple program) so
+	 * that 'omask' will not contain either of these signals after the call.
 	 */
 	sigemptyset(&bmask);
 	sigaddset(&bmask, SIGINT);
@@ -111,37 +114,43 @@ main(int argc, char *argv[])
 
 			print_pendsigs("Before sigsuspend() - pending signals:\n");
 			/*
-			 * The sigsuspend() system call temporarily changes the blocked
-			 * signal mask to the set to which sigmask points, and then waits
-			 * for a signal to arrive; on return the previous set of masked
-			 * signals is restored. The signal mask set is usually empty to 
-			 * indicate that all signals are to be unblocked for the duration
-			 * of the call.
+			 * The sigsuspend() system call temporarily changes the
+			 * blocked signal mask to the set to which sigmask
+			 * points, and then waits for a signal to arrive; on
+			 * return the previous set of masked signals is
+			 * restored. The signal mask set is usually empty to
+			 * indicate that all signals are to be unblocked for
+			 * the duration of the call.
 			 *
-			 * The sigsuspend() system call always terminates by being
-			 * interrupted, returning -1 with errno set to EINTR.
+			 * The sigsuspend() system call always terminates by
+			 * being interrupted, returning -1 with errno set to
+			 * EINTR.
 			 */
 			if (sigsuspend(&omask) == -1 && errno != EINTR)
 				errmsg_exit1("sigsuspend failed, %s\n", ERR_MSG);
 		} else {	/* pause_suspend == USE_SUSPEND */
 			/* 
-			 * The wrong way: unblock signal using sigprocmask(), then pause()
+			 * The wrong way: unblock signal using sigprocmask(),
+			 * then pause()
 			 */
 
 			if (sigprocmask(SIG_SETMASK, &omask, NULL) == -1)
-				errmsg_exit1("sigprocmask - SIG_SETMASK failed, %s\n", ERR_MSG);
+				errmsg_exit1("sigprocmask - SIG_SETMASK "
+					"failed, %s\n", ERR_MSG);
 
 			 /* 
-			  * At this point, if SIGINT arrives, it will be caught and
-			  * handled before the pause() call and, in consequence,
-			  * pause() will block. (And thus only another SIGINT signal
-			  * AFTER the pause call() will actually cause the pause()
-			  * call to be interrupted.)  Here we make the window between
-			  * the two calls a bit larger so that we have a better
-			  * chance of sending the signal.
+			  * At this point, if SIGINT arrives, it will be caught
+			  * and handled before the pause() call and, in
+			  * consequence, pause() will block. (And thus only
+			  * another SIGINT signal AFTER the pause call() will
+			  * actually cause the pause() call to be interrupted.)
+			  * Here we make the window between the two calls a bit
+			  * larger so that we have a better chance of sending
+			  * the signal.
 			  */
 
-			 printf("Unblocked SIGINT, now wait for %d seconds\n", sleep_time);
+			 printf("Unblocked SIGINT, now wait for %d seconds\n",
+				sleep_time);
 			 stim = time(NULL);
 			 while (time(NULL) < stim + sleep_time)
 				 continue;

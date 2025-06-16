@@ -58,37 +58,42 @@ main(int argc, char *argv[])
 		printf("%s: finished delay.\n", argv[0]);
 	}
 
-	/* Fetch signals until SIGINT (Control-C), SIGQUIT (Control-\) or SIGTERM */
+	/* 
+	 * Fetch signals until SIGINT (Control-C), SIGQUIT (Control-\) or
+	 * SIGTERM
+	 */
 	while (1) {
 		/*
-		 * The sigwaitinfo() system call selects the pending signal from the set
-		 * specified by set. Should any of multiple pending signals in the range
-		 * SIGRTMIN to SIGRTMAX be selected, it shall be the lowest numbered
-		 * one. The selection order between realtime and non-realtime signals,
-		 * or between multiple pending non-realtime signals, is unspecified. If
-		 * no signal in set is pending at the time of the call, the calling
-		 * thread is suspended until one or more signals in set become pending
-		 * or until it is interrupted by an unblocked, caught signal.
+		 * The sigwaitinfo() system call selects the pending signal
+		 * from the set specified by set. Should any of multiple pending
+		 * signals in the range SIGRTMIN to SIGRTMAX be selected, it
+		 * shall be the lowest numbered one. The selection order between
+		 * realtime and non-realtime signals, or between multiple
+		 * pending non-realtime signals, is unspecified. If no signal in
+		 * set is pending at the time of the call, the calling thread is
+		 * suspended until one or more signals in set become pending or
+		 * until it is interrupted by an unblocked, caught signal.
 		 *
-		 * Upon successful completion (that is, one of the signals specified by
-		 * set is pending or is generated) sigwaitinfo() return the selected
-		 * signal number.  Otherwise, the functions return a value of -1 and set
-		 * the global variable errno to indicate the error.
-		 * 
+		 * Upon successful completion (that is, one of the signals
+		 * specified by set is pending or is generated) sigwaitinfo()
+		 * return the selected signal number. Otherwise, the functions
+		 * return a value of -1 and set the global variable errno to
+		 * indicate the error.
 		 */
 		if ((sig = sigwaitinfo(&allsigs, &si)) == -1)
 			errmsg_exit1("sigwaitinfo failed, %s\n", ERR_MSG);
 
 		switch (sig) {
-			case SIGINT:
-			case SIGQUIT:
-			case SIGTERM:
-				exit(EXIT_SUCCESS);
+		case SIGINT:
+		case SIGQUIT:
+		case SIGTERM:
+			exit(EXIT_SUCCESS);
 		}
 
 		printf("Got signal: %d (%s)\n", sig, strsignal(sig));
-		printf("\tsi_signo=%d, si_code=%d (%s), si_value=%d\n",  si.si_signo,
-			si.si_code, (si.si_code == SI_USER) ? "SI_USER" :
+		printf("\tsi_signo=%d, si_code=%d (%s), si_value=%d\n",
+			si.si_signo, si.si_code,
+			(si.si_code == SI_USER) ? "SI_USER" :
 			(si.si_code == SI_QUEUE) ? "SI_QUEUE" : "other",
 			si.si_value.sival_int);
 		printf("\tsi_pid=%d, si_uid=%d\n", si.si_pid, si.si_uid);

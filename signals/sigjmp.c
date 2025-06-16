@@ -75,25 +75,28 @@ main(int argc, char *argv[])
 	if (jmpflag == SIGLONGJMP) {
 		printf("Calling siglongjmp()\n");
 		/*
-		 * The sigsetjmp()/siglongjmp() function pairs save and restore the
-		 * signal mask if the argument savemask is non-zero, otherwise only
-		 * the register set and the stack are saved.
+		 * The sigsetjmp()/siglongjmp() function pairs save and restore
+		 * the signal mask if the argument savemask is non-zero,
+		 * otherwise only the register set and the stack are saved.
 		 * More details see sigsetjmp(3)
 		 */
 		if (sigsetjmp(senv, 1) == 0)
 			canjmp = 1;	/* Executed after [sig]setjmp() */
 		else	/* Executed after [sig]longjmp() */
-			print_sigmask("After jump from handler, signal mask is:\n");
+			print_sigmask("After jump from handler, "
+				"signal mask is:\n");
 	} else {
 		printf("Calling longjmp()\n");
 		if (setjmp(env) == 0)
 			canjmp = 1;
 		else
-			print_sigmask("After jump from handler, signal mask is:\n");
+			print_sigmask("After jump from handler, "
+				"signal mask is:\n");
 	}
 
 	while (1) {	/* Wait for signals until killed */
-		printf("Please enter Control-C to test or enter Control-\\ to quit!\n");
+		printf("Please enter Control-C to test or enter Control-\\ "
+			"to quit!\n");
 		pause();
 	}
 	
@@ -103,7 +106,8 @@ main(int argc, char *argv[])
 static void
 sig_handler(int sig)
 {
-	printf("Received signal %d (%s), signal mask is:\n", sig, strsignal(sig));
+	printf("Received signal %d (%s), signal mask is:\n", sig,
+		strsignal(sig));
 	print_sigmask(NULL);
 
 	if (!canjmp) {
@@ -143,18 +147,20 @@ print_sigmask(const char *msg)
 
 	/*
 	 * SIG_BLOCK
-	 *	The new mask is the union of the current mask and the specified set.
+	 *	The new mask is the union of the current mask and the specified
+	 *	set.
 	 *
 	 * SIG_UNBLOCK
-	 *	The new mask is the intersection of the current mask and the complement
-	 *	of the specified set.
+	 *	The new mask is the intersection of the current mask and the
+	 *	complement of the specified set.
 	 * 
 	 * SIG_SETMASK
 	 *	The current mask is replaced by the specified set.
 	 *
-	 * If oset is not null, it is set to the previous value of the signal mask.
-	 * When set is null, the value of how is insignificant and the mask remains
-	 * unset providing a way to examine the signal mask without modification.
+	 * If oset is not null, it is set to the previous value of the signal
+	 * mask. When set is null, the value of how is insignificant and the
+	 * mask remains unset providing a way to examine the signal mask without
+	 * modification.
 	 */
 	if (sigprocmask(SIG_BLOCK, NULL, &currmask) == -1)
 		errmsg_exit1("sigprocmask failed, %s\n", ERR_MSG);

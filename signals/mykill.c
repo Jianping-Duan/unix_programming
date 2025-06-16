@@ -51,12 +51,13 @@ main(int argc, char *argv[])
 			printf("Process exists and we can send it a signal.\n");
 		} else {
 			if (errno == EPERM)
-				printf("Process exists, but we don't have permission to send "
-					"it a signal\n");
+				printf("Process exists, but we don't have "
+					"permission to send it a signal\n");
 			else if (errno == ESRCH)
 				printf("Process does not exists.\n");
 			else	/* errno == EINVAL */
-				printf("The signo argument is not a valid signal number.\n");
+				printf("The signo argument is not a valid "
+					"signal number.\n");
 			exit(EXIT_FAILURE);
 		}
 	}

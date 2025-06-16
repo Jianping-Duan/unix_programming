@@ -46,7 +46,8 @@ main(int argc, char *argv[])
 	sigset_t bmask, omask;
 
 	if (argc > 1 && strcmp(argv[1], "--help") == 0)
-		errmsg_exit1("Usage: %s [block-time [handler-sleep-time]]\n", argv[0]);
+		errmsg_exit1("Usage: %s [block-time [handler-sleep-time]]\n",
+			argv[0]);
 
 	printf("%s: PID is %d\n", argv[0], getpid());
 
@@ -61,9 +62,9 @@ main(int argc, char *argv[])
 	sigfillset(&sa.sa_mask);
 	/*
 	 * SA_SIGINFO:
-	 *	If this bit is set, the handler function is assumed to be pointed to by
-	 *	the sa_sigaction member of struct sigaction and should match the
-	 *	prototype shown above or as below in EXAMPLES.
+	 *	If this bit is set, the handler function is assumed to be
+	 *	pointed to by the sa_sigaction member of struct sigaction and
+	 *	should match the prototype shown above or as below in EXAMPLES.
 	 *	This bit should not be set when assigning SIG_DFL or SIG_IGN.
 	 */
 	sa.sa_flags = SA_SIGINFO;
@@ -74,15 +75,15 @@ main(int argc, char *argv[])
 	
 	/* 
 	 * Optionally block signals and sleep, allowing signals to be
-     * sent to us before they are unblocked and handled.
+	 * sent to us before they are unblocked and handled.
 	 */
 
 	if (argc <= 1)
 		goto nosleep;
 	
 	sigfillset(&bmask);
-	sigdelset(&bmask, SIGINT);		/* interrupt program */
-	sigdelset(&bmask, SIGTERM);		/* software termination signal */
+	sigdelset(&bmask, SIGINT);	/* interrupt program */
+	sigdelset(&bmask, SIGTERM);	/* software termination signal */
 	if (sigprocmask(SIG_SETMASK, &bmask, &omask) == -1)
 		errmsg_exit1("sigprocmask failed, %s\n", ERR_MSG);
 
@@ -120,10 +121,10 @@ siginfo_handler(int sig, siginfo_t *si, void *ucontext)
 
 	/* more details see '/usr/include/sys/signal.h' */
 	printf("\tsi_signo=%d, si_code=%d (%s), ", si->si_signo, si->si_code,
-		(si->si_code == SI_USER) ? "SI_USER" : (si->si_code == SI_QUEUE) ?
-		"SI_QUEUE" : "other");
-    printf("si_value=%d\n", si->si_value.sival_int);
-    printf("\tsi_pid=%d, si_uid=%d\n", si->si_pid, si->si_uid);
+		(si->si_code == SI_USER) ? "SI_USER" :
+		(si->si_code == SI_QUEUE) ? "SI_QUEUE" : "other");
+	printf("si_value=%d\n", si->si_value.sival_int);
+	printf("\tsi_pid=%d, si_uid=%d\n", si->si_pid, si->si_uid);
 
 	sleep(handler_sleep);
 }

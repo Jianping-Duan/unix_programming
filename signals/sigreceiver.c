@@ -66,20 +66,22 @@ main(int argc, char *argv[])
 	/* 
 	 * changes the current signal mask
 	 * (those signals that are blocked from delivery).
-	 * Signals are blocked if they are members of the current signal mask set.
+	 * Signals are blocked if they are members of the current signal mask
+	 * set.
 	 */
-	if (sigprocmask(SIG_SETMASK, &bmask, NULL) == -1)	/* Don't set oldset */
-		errmsg_exit1("sigprocmask(SIG_SETMASK,..) failed, %s\n", ERR_MSG);
+	if (sigprocmask(SIG_SETMASK, &bmask, NULL) == -1)
+		errmsg_exit1("sigprocmask(SIG_SETMASK,..) failed, %s\n",
+			ERR_MSG);
 
 	printf("%s sleeping for %d seconds.\n", argv[0], secs);
 	sleep(secs);
 
 	/* 
-	 * The sigpending() system call returns a mask of the signals pending for
-	 * delivery to the calling thread or the calling process in the location
-	 * indicated by set.  Signals may be pending because they are currently
-	 * masked, or transiently before delivery (although the latter case is not
-	 * normally detectable).
+	 * The sigpending() system call returns a mask of the signals pending
+	 * for delivery to the calling thread or the calling process in the
+	 * location indicated by set. Signals may be pending because they are
+	 * currently masked, or transiently before delivery (although the latter
+	 * case is not normally detectable).
 	 */
 	if (sigpending(&pmask) == -1)
 		errmsg_exit1("sigpending failed, %s\n", ERR_MSG);
@@ -92,7 +94,8 @@ main(int argc, char *argv[])
 	 */
 	sigemptyset(&emask);
 	if (sigprocmask(SIG_SETMASK, &emask, NULL) == -1)
-		errmsg_exit1("sigprocmask(SIG_SETMASK,..) failed, %s\n", ERR_MSG);
+		errmsg_exit1("sigprocmask(SIG_SETMASK,..) failed, %s\n",
+			ERR_MSG);
 
 nosleep:
 	while (!gotsigint)	/* Loop until SIGINT caught */
@@ -100,7 +103,8 @@ nosleep:
 
 	for (i = 1; i < NSIG; i++)
 		if (sigcnt[i] != 0)
-			printf("%s: signal %d caught %d times\n", argv[0], i, sigcnt[i]);
+			printf("%s: signal %d caught %d times\n", argv[0], i,
+				sigcnt[i]);
 
 	exit(EXIT_SUCCESS);
 }

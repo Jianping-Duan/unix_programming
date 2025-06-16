@@ -39,7 +39,8 @@ main(int argc, char *argv[])
 	pid_t pid;
 
 	if (argc < 4)
-		errmsg_exit1("Usage: %s pid num-sigs signo [signo2]\n", argv[0]);
+		errmsg_exit1("Usage: %s pid num-sigs signo [signo2]\n",
+			argv[0]);
 
 	pid = (int)getlong(argv[1], GN_ANY_BASE);
 	num = (int)getlong(argv[2], GN_GT_0);

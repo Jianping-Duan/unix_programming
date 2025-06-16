@@ -39,10 +39,10 @@ main(void)
 {
 	/*
 	 * void
-     * (*signal(int sig, void (*func)(int)))(int);
+	 * (*signal(int sig, void (*func)(int)))(int);
 	 * 
 	 * or in FreeBSD's equivalent but easier to read typedef'd version:
-     * typedef void (*sig_t) (int);
+	 * typedef void (*sig_t) (int);
 	 *
 	 * sig_t
 	 * signal(int sig, sig_t func);

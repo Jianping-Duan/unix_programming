@@ -32,43 +32,51 @@
 #include "unibsd.h"
 #include <signal.h>
 
+#define SALT	"$1$xyz"	/* More details see crypt(3) */
+
+static volatile int handled = 0; /* Counts number of calls to sig_handler */
+static char *str2;	/* Set from argv[2] */
+
+static void sig_handler(int);
+
 int
 main(int argc, char *argv[])
 {
-	int signo, nsigs, sigdat, i;
-	pid_t pid;
-	union sigval sv;
+	const char * const salt = "$1$xyz";
+	char *cstr1;
+	int callnum, mismatch;
+	struct sigaction sa;
 
-	if (argc < 4)
-		errmsg_exit1("Usage: %s pid signo sigdata [num-sigs]\n",
-			argv[0]);
+	if (argc != 3)
+		errmsg_exit1("Usage: %s str1 str2\n", argv[0]);
 
-	/*
-	 * Display our PID and UID, so that they can be compared with the
-	 * corresponding fields of the siginfo_t argument supplied to the
-	 * handler in the receiving process 
-	 */
-	printf("%s: PID is %d, UID is %d\n", argv[0], getpid(), getuid());
+	str2 = argv[2];
+	if ((cstr1 = strdup(crypt(argv[1], salt))) == NULL)
+		errmsg_exit1("strdup failed, %s\n", ERR_MSG);
 
-	pid = getlong(argv[1], GN_NONNEG);
-	signo = getint(argv[2]);
-	sigdat = getint(argv[3]);
-	nsigs = (argc > 4) ? getint(argv[4]) : 1;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = sig_handler;
+	if (sigaction(SIGINT, &sa, NULL) == -1)
+		errmsg_exit1("sigaction failed, %s\n", ERR_MSG);
 
-	/*
-	 * The sigqueue() system call causes the signal specified by signo to
-	 * be sent with the value specified by value to the process specified
-	 * by pid. If signo is zero (the null signal), error checking is
-	 * performed but no signal is actually sent. The null signal can be used
-	 * to check the validity of PID.
-	 *
-	 * More details see sigqueue(2)
-	 */
-	for (i = 0; i < nsigs; i++) {
-		sv.sival_int = sigdat + i;
-		if (sigqueue(pid, signo, sv) == -1)
-			errmsg_exit1("sigqueue failed (%d), %s\n", i, ERR_MSG);
+	callnum = 1, mismatch = 0;
+	while (1) {
+		if (strcmp(cstr1, crypt(argv[1], SALT)) != 0) {
+			mismatch++;
+			printf("Mismatch on call %d (mismatch=%d handled=%d)\n",
+				callnum, mismatch, handled);
+		}
+		callnum++;
 	}
 
 	exit(EXIT_SUCCESS);
+}
+
+static void
+sig_handler(int sig)
+{
+	fflush(stdout);
+	printf("%s, %s", strsignal(sig), crypt(str2, SALT));
+	handled++;
 }
