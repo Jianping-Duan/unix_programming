@@ -41,7 +41,7 @@ int
 main(void)
 {
 	 char cmd[CMD_LEN];	/* Command to be executed by system() */
-	 int status;	/* Status return from system() */
+	 int status;		/* Status return from system() */
 
 	 while (1) {
 		printf("Command (myquit to quit)> ");
@@ -62,7 +62,8 @@ main(void)
 			errmsg_exit1(">>>> system failed, %s\n", ERR_MSG);
 		else {
 			if (WIFEXITED(status) && WEXITSTATUS(status) == 127)
-				printf(">>>> (Probably) could not invoke shell\n");
+				printf(">>>> (Probably) could not invoke "
+					"shell\n");
 			else
 				show_wait_status(">>>> ", status);
 		}
@@ -78,19 +79,21 @@ show_wait_status(const char *msg, int status)
 		printf("%s", msg);
 
 	if (WIFEXITED(status))
-		printf("child process exited, status = %d\n", WEXITSTATUS(status));
+		printf("child process exited, status = %d\n",
+			WEXITSTATUS(status));
 	else if(WIFSIGNALED(status)) {
-		printf("child process killed by signal %d (%s)\n", WTERMSIG(status),
-			strsignal(WTERMSIG(status)));
+		printf("child process killed by signal %d (%s)\n",
+			WTERMSIG(status), strsignal(WTERMSIG(status)));
 		if (WCOREDUMP(status))
 			printf(" (core dumped)\n");
 	} else if (WIFSTOPPED(status))
-		printf("child process stopped by signal %d (%s)\n", WSTOPSIG(status),
-			strsignal(WSTOPSIG(status)));
+		printf("child process stopped by signal %d (%s)\n",
+			WSTOPSIG(status), strsignal(WSTOPSIG(status)));
 	else if (WIFCONTINUED(status))
 		printf("child process continued\n");
 	else
-		printf("what happend to this child ? (status = 0x%x)\n", status);
+		printf("what happend to this child ? (status = 0x%x)\n",
+			status);
 }
 
 static int
@@ -100,14 +103,14 @@ mysystem(const char *cmd)
 	pid_t cpid;
 
 	switch (cpid = fork()) {
-		case -1:
+	case -1:
+		return -1;
+	case 0:
+		execlp("/bin/tcsh", "tcsh", "-c", cmd, (char *)NULL);
+		_exit(127);	/* failed execlp */
+	default:
+		if (waitpid(cpid, &status, 0) == -1)
 			return -1;
-		case 0:
-			execlp("/bin/tcsh", "tcsh", "-c", cmd, (char *)NULL);
-			_exit(127);	/* failed execlp */
-		default:
-			if (waitpid(cpid, &status, 0) == -1)
-				return -1;
-			return status;
+		return status;
 	}
 }

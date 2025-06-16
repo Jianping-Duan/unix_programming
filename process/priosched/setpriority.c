@@ -51,18 +51,19 @@ main(int argc, char *argv[])
 
 	/*
 	 * The scheduling priority of the process, process group, or user, as
-	 * indicated by which and who is obtained with the getpriority() system call
-	 * and set with the setpriority() system call. The which argument is one of
-	 * PRIO_PROCESS, PRIO_PGRP, or PRIO_USER, and who is interpreted relative to
-	 * which (a process identifier for PRIO_PROCESS, process group identifier
-	 * for PRIO_PGRP, and a user ID for PRIO_USER).  A zero value of who denotes
-	 * the current process, process group, or user. The prio argument is a value
-	 * in the range -20 to 20. The default priority is 0; lower priorities
-	 * cause more favorable scheduling
+	 * indicated by which and who is obtained with the getpriority() system
+	 * call and set with the setpriority() system call. The which argument
+	 * is one of PRIO_PROCESS, PRIO_PGRP, or PRIO_USER, and who is
+	 * interpreted relative to which (a process identifier for PRIO_PROCESS,
+	 * process group identifier for PRIO_PGRP, and a user ID for PRIO_USER).
+	 * A zero value of who denotes the current process, process group, or
+	 * user. The prio argument is a value in the range -20 to 20. The
+	 * default priority is 0; lower priorities cause more favorable
+	 * scheduling
 	 *
-	 * The setpriority() function returns the value 0 if successful; otherwise
-	 * the value -1 is returned and the global variable errno is set to indicate
-	 * the error.
+	 * The setpriority() function returns the value 0 if successful;
+	 * otherwise the value -1 is returned and the global variable errno is
+	 * set to indicate the error.
 	 */
 	if (setpriority(which, who, prio) == -1)
 		errmsg_exit1("setpriority failed, %s\n", ERR_MSG);
@@ -74,9 +75,10 @@ main(int argc, char *argv[])
 	 * processes to the specified value. Only the super-user may lower
 	 * priorities.
 	 *
-	 * Since getpriority() can legitimately return the value -1, it is necessary
-	 * to clear the external variable errno prior to the call, then check it
-	 * afterward to determine if a -1 is an error or a legitimate value.
+	 * Since getpriority() can legitimately return the value -1, it is
+	 * necessary to clear the external variable errno prior to the call,
+	 * then check it afterward to determine if a -1 is an error or a
+	 * legitimate value.
 	 */
 	errno = 0;
 	if ((prio = getpriority(which, who)) == -1 && errno != 0)

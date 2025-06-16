@@ -78,8 +78,9 @@ main(int argc, char *argv[])
 	 * terminal, and all current access to the controlling terminal is
 	 * revoked.
 	 *
-	 * Most C programs call the library routine exit(3), which flushes buffers,
-	 * closes streams, unlinks temporary files, etc., before calling _exit().
+	 * Most C programs call the library routine exit(3), which flushes
+	 * buffers, closes streams, unlinks temporary files, etc., before
+	 * calling _exit().
 	 */
 	if (pid == 0 && argc > 1)
 		_exit(EXIT_SUCCESS);

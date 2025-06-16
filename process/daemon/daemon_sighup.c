@@ -41,13 +41,13 @@ static const char *CONFIG_FILE = "/tmp/daemon_sighup.conf";
 static FILE *logfp;
 static volatile sig_atomic_t hup_received = 0;
 
-#define	BD_NO_CHDIR				01	/* Don't chdir('/') */
-#define BD_NO_CLOSE_FILES		02	/* Don't close all open files */
-#define BD_NO_REOPEN_STDFDS		04	/* Don't reopen stdin, stdout and stderr
-									   to '/dev/null' */
-#define BD_NO_UMASK0			010	/* Don't do a umask(0) */
+#define	BD_NO_CHDIR		01	/* Don't chdir('/') */
+#define BD_NO_CLOSE_FILES	02	/* Don't close all open files */
+#define BD_NO_REOPEN_STDFDS	04	/* Don't reopen stdin, stdout and stderr
+					   to '/dev/null' */
+#define BD_NO_UMASK0		010	/* Don't do a umask(0) */
 #define BD_MAX_CLOSE	8192	/* Maximum file descriptors to close if
-								   sysconf(_SC_OPEN_MAX) is indeterminate */
+				   sysconf(_SC_OPEN_MAX) is indeterminate */
 static int become_daemon(int);
 
 static void log_open(const char *);
@@ -79,13 +79,13 @@ main(void)
 	unslept = SLEEP_TIME;
 	while (1) {
 		/*
-		 * If the sleep() function returns because the requested time has
-		 * elapsed, the value returned will be zero. If the sleep() function
-		 * returns due to the delivery of a signal, the value returned will be
-		 * the unslept amount (the requested time minus the time actually slept)
-		 * in seconds.
+		 * If the sleep() function returns because the requested time
+		 * has elapsed, the value returned will be zero. If the sleep()
+		 * function returns due to the delivery of a signal, the value
+		 * returned will be the unslept amount (the requested time minus
+		 * the time actually slept) in seconds.
 		 */
-		unslept = sleep(unslept);	/*  Returns > 0 if interrupted */
+		unslept = sleep(unslept); /*  Returns > 0 if interrupted */
 
 		if (hup_received) {		/* If we got SIGHUP... */
 			hup_received = 0;	/* Get ready for next SIGHUP */
@@ -109,9 +109,9 @@ become_daemon(int flags)
 
 	/* Become background process */
 	switch(fork()) {
-		case -1: return -1;
-		case 0: break;					/* Child falls through...*/
-		default: _exit(EXIT_SUCCESS);	/* while parent terminates */
+	case -1: return -1;
+	case 0: break;			/* Child falls through...*/
+	default: _exit(EXIT_SUCCESS);	/* while parent terminates */
 	}
 
 	/* Become leader of new session */
@@ -120,9 +120,9 @@ become_daemon(int flags)
 
 	/* Ensure we are not session leader */
 	switch(fork()) {
-		case -1: return -1;
-		case 0: break;					/* Child falls through...*/
-		default: _exit(EXIT_SUCCESS);	/* while parent terminates */
+	case -1: return -1;
+	case 0: break;			/* Child falls through...*/
+	default: _exit(EXIT_SUCCESS);	/* while parent terminates */
 	}
 
 	if (!(flags & BD_NO_UMASK0))

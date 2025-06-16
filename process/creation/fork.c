@@ -41,14 +41,14 @@ main(void)
 
 	/* more details see fork(2) */
 	switch (pid = fork()) {
-		case -1:
-			errmsg_exit1("fork failed, %s\n", ERR_MSG);
-		case 0:	/* child process */
-			datseg++;
-			stackseg--;
-			break;
-		default:	/* parent process */
-			sleep(3);	/* Give child a chance to execute */
+	case -1:
+		errmsg_exit1("fork failed, %s\n", ERR_MSG);
+	case 0:	/* child process */
+		datseg++;
+		stackseg--;
+		break;
+	default:	/* parent process */
+		sleep(3);	/* Give child a chance to execute */
 	}
 
 	printf("PID=%d %s datseg=%d stackseg=%d\n", getpid(),

@@ -45,6 +45,7 @@ main(int argc, char *argv[])
 	else
 		filename = argv[1];
 
-	execle(argv[1], filename, "Hello World", "Goodbye", (char *)NULL, envvec);
+	execle(argv[1], filename, "Hello World", "Goodbye", (char *)NULL,
+		envvec);
 	errmsg_exit1("execle failed, %s\n", ERR_MSG);
 }

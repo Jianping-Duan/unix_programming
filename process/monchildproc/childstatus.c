@@ -67,45 +67,52 @@ main(int argc, char *argv[])
 
 		while (1) {
 			/*
-			 * For the waitpid() and wait4() functions, the single wpid argument
-			 * specifies the set of child processes for which to wait.
+			 * For the waitpid() and wait4() functions, the single
+			 * wpid argument specifies the set of child processes
+			 * for which to wait.
 			 *
 			 * If wpid is -1, the call waits for any child process.
 			 * 
-			 * If wpid is 0, the call waits for any child process in the process
-			 * group of the caller.
+			 * If wpid is 0, the call waits for any child process in
+			 * the process group of the caller.
 			 *
-			 * If wpid is greater than zero, the call waits for the process
-			 * with process ID wpid.
+			 * If wpid is greater than zero, the call waits for the
+			 * process with process ID wpid.
 			 *
-			 * If wpid is less than -1, the call waits for any process whose
-			 * process group ID equals the absolute value of wpid.
+			 * If wpid is less than -1, the call waits for any
+			 * process whose process group ID equals the absolute
+			 * value of wpid.
 			 *
 			 * WCONTINUED:
-			 *	Report the status of selected processes that have continued
-			 *	from a job control stop by receiving a SIGCONT signal.
+			 *	Report the status of selected processes that
+			 *	have continued from a job control stop by
+			 *	receiving a SIGCONT signal.
 			 *
 			 * WUNTRACED:
-			 *	Report the status of selected processes which are stopped due
-			 *	to a SIGTTIN, SIGTTOU, SIGTSTP, or SIGSTOP signal.
+			 *	Report the status of selected processes which
+			 *	are stopped due to a SIGTTIN, SIGTTOU, SIGTSTP,
+			 *	or SIGSTOP signal.
 			 *
 			 * More details see waitpid(2)
 			 */
-			if ((cpid = waitpid(-1, &status, WUNTRACED | WCONTINUED)) == -1)
+			cpid = waitpid(-1, &status, WUNTRACED | WCONTINUED);
+			if (cpid == -1)
 				errmsg_exit1("waitpid (-1) failed, %s\n", ERR_MSG);
 
 			/* Print status in hex, and as separate decimal bytes */
-			printf("waitpid() returned: PID = %d, status = 0x%04x, (%d, %d)\n",
-				cpid, status, status >> 8, status & 0xff);
+			printf("waitpid() returned: PID = %d, status = 0x%04x, "
+				"(%d, %d)\n", cpid, status, status >> 8,
+				status & 0xff);
 			show_wait_status(status);
 
 			/*
 			 * WIFEXITED(status):
-			 *	True if the process terminated normally by a call to _exit(2) or
-			 *	exit(3).
+			 *	True if the process terminated normally by a
+			 *	call to _exit(2) or exit(3).
 			 *
 			 * WIFSIGNALED(status):
-			 *	True if the process terminated due to receipt of a signal.
+			 *	True if the process terminated due to receipt of
+			 *	a signal.
 			 * 
 			 */
 			if (WIFEXITED(status) || WIFSIGNALED(status))
@@ -131,22 +138,24 @@ show_wait_status(int status)
 	 *	traced (see ptrace(2)).
 	 *
 	 * WIFCONTINUED(status):
-	 *	True if the process has not terminated, and has continued after a
-	 *	job control stop.  This macro can be true only if the wait call
+	 *	True if the process has not terminated, and has continued after
+	 *	a job control stop. This macro can be true only if the wait call
 	 *	specified the WCONTINUED option.
 	 */
 	if (WIFEXITED(status))
-		printf("child process exited, status = %d\n", WEXITSTATUS(status));
+		printf("child process exited, status = %d\n",
+			WEXITSTATUS(status));
 	else if(WIFSIGNALED(status)) {
-		printf("child process killed by signal %d (%s)\n", WTERMSIG(status),
-			strsignal(WTERMSIG(status)));
+		printf("child process killed by signal %d (%s)\n",
+			WTERMSIG(status), strsignal(WTERMSIG(status)));
 		if (WCOREDUMP(status))
 			printf(" (core dumped)\n");
 	} else if (WIFSTOPPED(status))
-		printf("child process stopped by signal %d (%s)\n", WSTOPSIG(status),
-			strsignal(WSTOPSIG(status)));
+		printf("child process stopped by signal %d (%s)\n",
+			WSTOPSIG(status), strsignal(WSTOPSIG(status)));
 	else if (WIFCONTINUED(status))
 		printf("child process continued\n");
 	else
-		printf("what happend to this child ? (status = 0x%x)\n", status);
+		printf("what happend to this child ? (status = 0x%x)\n",
+			status);
 }

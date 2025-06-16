@@ -30,27 +30,22 @@
  *
  */
 #include "unibsd.h"
+#include <fcntl.h>
 
 int
 main(int argc, char *argv[])
 {
-	char *argvec[10];
-	char *envvec[] = { "MYENV1=test01", "MYENV2=test02", NULL };
+	int flags;
 
-	if (argc != 2 || strcmp(argv[1], "--help") == 0)
-		errmsg_exit1("Usage: %s pathname\n", argv[0]);
+	if (argc > 1) {
+		if ((flags = fcntl(STDOUT_FILENO, F_GETFD)) == -1)
+			errmsg_exit1("fcntl - F_GETFD failed, %s\n", ERR_MSG);
 
-	/* Create an argument list for the new program */
-	if ((argvec[0] = strrchr(argv[1], '/')) != NULL)
-		argvec[0]++;
-	else
-		argvec[0] = argv[1];
-	argvec[1] = "hello world";
-	argvec[2] = "goodbye";
-	argvec[3] = NULL;
+		flags |= FD_CLOEXEC;
+		if (fcntl(STDOUT_FILENO, F_SETFD, flags) == -1)
+			errmsg_exit1("fcntl - F_SETFD failed, %s\n", ERR_MSG);
+	}
 
-	/* Execute the program specified in argv[1] */
-	/* more details see execve(3) */
-	if (execve(argv[1], argvec, envvec) == -1)
-		errmsg_exit1("execve failed, %s\n", ERR_MSG);
+	execlp("/bin/ls", "ls", "-l", argv[0], (char *)NULL);
+	errmsg_exit1("execlp failed, %s\n", ERR_MSG);
 }

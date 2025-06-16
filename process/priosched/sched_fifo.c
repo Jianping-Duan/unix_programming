@@ -46,8 +46,8 @@ main(void)
 	setbuf(stdout, NULL);
 
 	/*
-	 * Confine all processes to a single CPU, so that the processes won't run
-	 * in parallel on multi-CPU systems.
+	 * Confine all processes to a single CPU, so that the processes won't
+	 * run in parallel on multi-CPU systems.
 	 */
 
 	CPU_ZERO(&cset);
@@ -57,21 +57,23 @@ main(void)
 		errmsg_exit1("sched_setaffinity failed, %s\n", ERR_MSG);
 
 	/*
-	 * Establish a CPU time limit. This demonstrates how we can ensure that a
-	 * runaway realtime process is terminated if we make a programming error.
-	 * The resource limit is inherited y the child created using fork().
+	 * Establish a CPU time limit. This demonstrates how we can ensure that
+	 * a runaway realtime process is terminated if we make a programming
+	 * error. The resource limit is inherited y the child created using
+	 * fork().
 	 *
-	 * An alternative technique would be to make an alarm() call in each process
-	 * (since interval timers are not inherited across fork()).
+	 * An alternative technique would be to make an alarm() call in each
+	 * process (since interval timers are not inherited across fork()).
 	 */
 
 	/*
-	 * Limits on the consumption of system resources by the current process and
-	 * each process it creates may be obtained with the getrlimit() system call,
-	 * and set with the setrlimit() system call.
+	 * Limits on the consumption of system resources by the current process
+	 * and each process it creates may be obtained with the getrlimit()
+	 * system call, and set with the setrlimit() system call.
 	 *
 	 * RLIMIT_CPU:
-	 *	The maximum amount of cpu time (in seconds) to be used by each process.
+	 *	The maximum amount of cpu time (in seconds) to be used by each
+	 *	process.
 	 *
 	 * more details see setrlimit(2).
 	 */
@@ -83,13 +85,14 @@ main(void)
 	/* 
 	 * Run the two processes in the lowest SCHED_FIFO priority.
 	 *
-	 * The sched_get_priority_max() and sched_get_priority_min() system calls
-	 * return the appropriate maximum or minimum, respectively, for the
-	 * scheduling policy specified by policy. The sched_rr_get_interval()
-	 * system call updates the timespec structure referenced by the interval
-	 * argument to contain the current execution time limit (i.e., time quantum)
-	 * for the process specified by pid. If pid is zero, the current execution
-	 * time limit for the calling process is returned.
+	 * The sched_get_priority_max() and sched_get_priority_min() system
+	 * calls return the appropriate maximum or minimum, respectively, for
+	 * the scheduling policy specified by policy. The
+	 * sched_rr_get_interval() system call updates the timespec structure
+	 * referenced by the interval argument to contain the current execution
+	 * time limit (i.e., time quantum) for the process specified by pid. If
+	 * pid is zero, the current execution time limit for the calling process
+	 * is returned.
 	 */
 	if ((sp.sched_priority = sched_get_priority_min(SCHED_FIFO)) == -1)
 		errmsg_exit1("sched_get_priority_min failed, %s\n", ERR_MSG);
@@ -117,21 +120,22 @@ use_cpu(const char *msg, int termsec, int yieldsec)
 
 	while (1) {
 		/*
-		 * The times() function returns the value of time in CLK_TCK's of a
-		 * second since the system startup time. The current value of CLK_TCK,
-		 * the frequency of the statistics clock in ticks per second, may be
-		 * obtained through the sysconf(3) interface.
+		 * The times() function returns the value of time in CLK_TCK's
+		 * of a second since the system startup time. The current value
+		 * of CLK_TCK, the frequency of the statistics clock in ticks
+		 * per second, may be obtained through the sysconf(3) interface.
 		 */
 		if (times(&vtms) == -1)
 			errmsg_exit1("times failed, %s\n", ERR_MSG);
 
 		/*
 		 * tms_utime:
-		 *	The CPU time charged for the execution of user instructions.
+		 *	The CPU time charged for the execution of user
+		 *	instructions.
 		 *
 		 * tms_stime:
-		 *	The CPU time charged for execution by the system on behalf of
-		 *	the process.
+		 *	The CPU time charged for execution by the system on
+		 *	behalf of the process.
 		 *
 		 * more details see times(2).
 		 */
@@ -142,22 +146,26 @@ use_cpu(const char *msg, int termsec, int yieldsec)
 
 		if (centisecs >= prevstep + CSEC_STEP) {
 			prevstep += CSEC_STEP;
-			printf("%s (PID %d) cpu=%0.2f\n", msg, getpid(), centisecs / 100.0);
+			printf("%s (PID %d) cpu=%0.2f\n", msg, getpid(),
+				centisecs / 100.0);
 		}
 
 		if (centisecs > termsec * 100)	/* Terminate after 5 seconds */
 			break;
 
-		if (centisecs >= prevsec + yieldsec * 100) {	/* Yield once/second */
+		/* Yield once/second */
+		if (centisecs >= prevsec + yieldsec * 100) {
 			prevsec = centisecs;
 
 			/*
-			 * The sched_yield() system call forces the running process to
-			 * relinquish the processor until it again becomes the head of its
-			 * process list. It takes no arguments.
+			 * The sched_yield() system call forces the running
+			 * process to relinquish the processor until it again
+			 * becomes the head of its process list. It takes no
+			 * arguments.
 			 */
 			if (sched_yield() == -1)
-				fprintf(stderr, "Warning, sched_yield failed, %s\n", ERR_MSG);
+				fprintf(stderr, "Warning, sched_yield failed, "
+					"%s\n", ERR_MSG);
 		}
 	}
 }

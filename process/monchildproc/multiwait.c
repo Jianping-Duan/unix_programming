@@ -46,15 +46,16 @@ main(int argc, char *argv[])
 
 	for (i = 1; i < argc; i++)
 		switch (cpid = fork()) {
-			case -1:
-				errmsg_exit1("fork failed, %s\n", ERR_MSG);
-			case 0:
-				printf("[%s] Child process started with PID %d, sleeping %s "
-					"seconds\n", currtime("%T"), getpid(), argv[i]);
-				sleep(getint(argv[i]));
-				_exit(EXIT_SUCCESS);
-			default:
-				break;	/* Parent just continued around loop */
+		case -1:
+			errmsg_exit1("fork failed, %s\n", ERR_MSG);
+		case 0:
+			printf("[%s] Child process started with PID %d, "
+				"sleeping %s seconds\n", currtime("%T"),
+				getpid(), argv[i]);
+			sleep(getint(argv[i]));
+			_exit(EXIT_SUCCESS);
+		default:
+			break;	/* Parent just continued around loop */
 		}
 	
 	numwaits = 0;	/* Number of children so far waited for */

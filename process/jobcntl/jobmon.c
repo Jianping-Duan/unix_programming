@@ -56,8 +56,8 @@ main(void)
 	 * If stdin is a terminal, this is the first process in pipeline:
 	 * print a heading and initialize message to be sent down pipe
 	 *
-	 * The isatty() function determines if the file descriptor fd refers to a
-	 * valid terminal type device.
+	 * The isatty() function determines if the file descriptor fd refers to
+	 * a valid terminal type device.
 	 */
 	if (isatty(STDIN_FILENO)) {
 		fprintf(stderr, "Terminal foreground process group: %d\n",
@@ -70,13 +70,14 @@ main(void)
 	}
 
 	cmdnum++;
-	fprintf(stderr, "%4d\t%5d\t%5d\t%5d\t%5d\n", cmdnum, getpid(), getppid(),
-		getpgrp(), getsid(0));
+	fprintf(stderr, "%4d\t%5d\t%5d\t%5d\t%5d\n", cmdnum, getpid(),
+		getppid(), getpgrp(), getsid(0));
 
 	 /* If not the last process, pass a message to the next process */
 	 if (!isatty(STDOUT_FILENO))	/* If not tty, then should be pipe */
 		 if (write(STDOUT_FILENO, &cmdnum, sizeof (cmdnum)) == -1)
-			 errmsg_exit1("write - STDOUT_FILENO failed, %s\n", ERR_MSG);
+			 errmsg_exit1("write - STDOUT_FILENO failed, %s\n",
+				ERR_MSG);
 
 	while (1)	/* Wait for signals */
 		pause();

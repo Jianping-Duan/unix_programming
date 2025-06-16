@@ -30,27 +30,31 @@
  *
  */
 #include "unibsd.h"
+#include <sys/wait.h>
 
 int
 main(int argc, char *argv[])
 {
-	char *argvec[10];
-	char *envvec[] = { "MYENV1=test01", "MYENV2=test02", NULL };
+	int i, n;
 
-	if (argc != 2 || strcmp(argv[1], "--help") == 0)
-		errmsg_exit1("Usage: %s pathname\n", argv[0]);
+	if (argc > 1 && strcmp(argv[1], "--help") == 0)
+		errmsg_exit1("Usage: %s [num-process]\n");
+	n = (argc > 1) ? getint(argv[1]) : 1;
 
-	/* Create an argument list for the new program */
-	if ((argvec[0] = strrchr(argv[1], '/')) != NULL)
-		argvec[0]++;
-	else
-		argvec[0] = argv[1];
-	argvec[1] = "hello world";
-	argvec[2] = "goodbye";
-	argvec[3] = NULL;
+	setvbuf(stdout, NULL, _IONBF, 0);
 
-	/* Execute the program specified in argv[1] */
-	/* more details see execve(3) */
-	if (execve(argv[1], argvec, envvec) == -1)
-		errmsg_exit1("execve failed, %s\n", ERR_MSG);
+	for (i = 0; i < n; i++)
+		switch (fork()) {
+		case -1:
+			errmsg_exit1("fork failed, %s\n", ERR_MSG);
+		case 0:
+			printf("%d child\t\tPID = %d\n", i, getpid());
+			_exit(EXIT_SUCCESS);
+		default:
+			printf("%d parent\tPID = %d\n", i, getpid());
+			wait(NULL);
+			break;
+		}
+
+	exit(EXIT_SUCCESS);
 }

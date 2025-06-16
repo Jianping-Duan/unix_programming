@@ -42,7 +42,7 @@ int
 main(void)
 {
 	 char cmd[CMD_LEN];	/* Command to be executed by system() */
-	 int status;	/* Status return from system() */
+	 int status;		/* Status return from system() */
 
 	 while (1) {
 		printf("Command (myquit to quit)> ");
@@ -63,7 +63,8 @@ main(void)
 			errmsg_exit1(">>>> system failed, %s\n", ERR_MSG);
 		else {
 			if (WIFEXITED(status) && WEXITSTATUS(status) == 127)
-				printf(">>>> (Probably) could not invoke shell\n");
+				printf(">>>> (Probably) could not invoke "
+					"shell\n");
 			else
 				show_wait_status(">>>> ", status);
 		}
@@ -79,19 +80,21 @@ show_wait_status(const char *msg, int status)
 		printf("%s", msg);
 
 	if (WIFEXITED(status))
-		printf("child process exited, status = %d\n", WEXITSTATUS(status));
+		printf("child process exited, status = %d\n",
+			WEXITSTATUS(status));
 	else if(WIFSIGNALED(status)) {
-		printf("child process killed by signal %d (%s)\n", WTERMSIG(status),
-			strsignal(WTERMSIG(status)));
+		printf("child process killed by signal %d (%s)\n",
+			WTERMSIG(status), strsignal(WTERMSIG(status)));
 		if (WCOREDUMP(status))
 			printf(" (core dumped)\n");
 	} else if (WIFSTOPPED(status))
-		printf("child process stopped by signal %d (%s)\n", WSTOPSIG(status),
-			strsignal(WSTOPSIG(status)));
+		printf("child process stopped by signal %d (%s)\n",
+			WSTOPSIG(status), strsignal(WSTOPSIG(status)));
 	else if (WIFCONTINUED(status))
 		printf("child process continued\n");
 	else
-		printf("what happend to this child ? (status = 0x%x)\n", status);
+		printf("what happend to this child ? (status = 0x%x)\n",
+			status);
 }
 
 static int
@@ -127,52 +130,56 @@ mysystem(const char *cmd)
 		errmsg_exit1("sigaction - SIGQUIT failed, %s\n", ERR_MSG);
 
 	switch (cpid = fork()) {
-		case -1:
-			status = -1;
-			break;
-		case 0:
-			/*
-			 * We ignore possible error returns because the only specified error
-			 * is for a failed exec(), and because errors in these calls can't
-			 * affect the caller of system() (which is a separate process)
-			 */
+	case -1:
+		status = -1;
+		break;
+	case 0:
+		/*
+		 * We ignore possible error returns because the only specified
+		 * error is for a failed exec(), and because errors in these
+		 * calls can't affect the caller of system() (which is a
+		 * separate process)
+		 */
 
-			sigemptyset(&sadfl.sa_mask);
-			sadfl.sa_handler = SIG_DFL;
-			sadfl.sa_flags = 0;
-			if (saoint.sa_handler != SIG_IGN)
-				if (sigaction(SIGINT, &sadfl, NULL) == -1)
-					errmsg_exit1("sigaction - SIGINT failed, %s\n", ERR_MSG);
-			if (saoquit.sa_handler != SIG_IGN)
-				if (sigaction(SIGQUIT, &sadfl, NULL) == -1)
-					errmsg_exit1("sigaction - SIGQUIT failed, %s\n", ERR_MSG);
+		sigemptyset(&sadfl.sa_mask);
+		sadfl.sa_handler = SIG_DFL;
+		sadfl.sa_flags = 0;
+		if (saoint.sa_handler != SIG_IGN)
+			if (sigaction(SIGINT, &sadfl, NULL) == -1)
+				errmsg_exit1("sigaction - SIGINT failed, %s\n",
+					ERR_MSG);
+		if (saoquit.sa_handler != SIG_IGN)
+			if (sigaction(SIGQUIT, &sadfl, NULL) == -1)
+				errmsg_exit1("sigaction - SIGQUIT failed, %s\n",
+					ERR_MSG);
 
-			if (sigprocmask(SIG_SETMASK, &omask, NULL) == -1)
-				errmsg_exit1("sigprocmask - SIG_SETMASK failed, %s\n", ERR_MSG);
+		if (sigprocmask(SIG_SETMASK, &omask, NULL) == -1)
+			errmsg_exit1("sigprocmask - SIG_SETMASK failed, %s\n",
+				ERR_MSG);
 
-			execlp("/bin/tcsh", "tcsh", "-c", cmd, (char *)NULL);
-			_exit(127);
-		default:	/* Parent: wait for our child to terminate */
-			/*
-			 * We must use waitpid() for this task; using wait() could
-			 * inadvertently collect the status of one of the caller's other
-			 * children.
-			 *
-			 * If waitpid() returns due to a stopped, continued, or terminated
-			 * child process, the process ID of the child is returned to the
-			 * calling process. If there are no children not previously awaited,
-			 * -1 is returned with errno set to ECHILD. Otherwise, if WNOHANG is
-			 * specified and there are no stopped, continued or exited children,
-			 * 0 is returned. If an error is detected or a caught signal aborts
-			 * the call, a value of -1 is returned and errno is set to indicate
-			 * the error.
-			 */
-			while(waitpid(cpid, &status, 0) == -1)
-				if (errno != EINTR) {
-					status = -1;
-					break;
-				}
-			break;
+		execlp("/bin/tcsh", "tcsh", "-c", cmd, (char *)NULL);
+		_exit(127);
+	default:	/* Parent: wait for our child to terminate */
+		/*
+		 * We must use waitpid() for this task; using wait() could
+		 * inadvertently collect the status of one of the caller's other
+		 * children.
+		 *
+		 * If waitpid() returns due to a stopped, continued, or
+		 * terminated child process, the process ID of the child is
+		 * returned to the calling process. If there are no children not
+		 * previously awaited, -1 is returned with errno set to ECHILD.
+		 * Otherwise, if WNOHANG is specified and there are no stopped,
+		 * continued or exited children, 0 is returned. If an error is
+		 * detected or a caught signal aborts the call, a value of -1 is
+		 * returned and errno is set to indicate the error.
+		 */
+		while(waitpid(cpid, &status, 0) == -1)
+			if (errno != EINTR) {
+				status = -1;
+				break;
+			}
+		break;
 	}
 
 	/* Unblock SIGCHLD, restore dispositions of SIGINT and SIGQUIT */

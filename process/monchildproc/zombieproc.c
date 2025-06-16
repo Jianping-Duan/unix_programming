@@ -30,27 +30,40 @@
  *
  */
 #include "unibsd.h"
+#include <signal.h>
+
+#define CMDLEN	128
 
 int
-main(int argc, char *argv[])
+main(void)
 {
-	char *argvec[10];
-	char *envvec[] = { "MYENV1=test01", "MYENV2=test02", NULL };
+	pid_t cpid;
+	char cmd[CMDLEN];
 
-	if (argc != 2 || strcmp(argv[1], "--help") == 0)
-		errmsg_exit1("Usage: %s pathname\n", argv[0]);
+	setbuf(stdout, NULL);	/* Disable buffering of stdout */
 
-	/* Create an argument list for the new program */
-	if ((argvec[0] = strrchr(argv[1], '/')) != NULL)
-		argvec[0]++;
-	else
-		argvec[0] = argv[1];
-	argvec[1] = "hello world";
-	argvec[2] = "goodbye";
-	argvec[3] = NULL;
+	printf("Parent: PID = %d\n", getpid());
+	printf("\n");
 
-	/* Execute the program specified in argv[1] */
-	/* more details see execve(3) */
-	if (execve(argv[1], argvec, envvec) == -1)
-		errmsg_exit1("execve failed, %s\n", ERR_MSG);
+	if ((cpid = fork()) == -1)
+		errmsg_exit1("fork failed, %s\n", ERR_MSG);
+	else if (cpid == 0) {
+		/* Child: immediately exits to become zombie */
+		printf("Child (PID = %d) exiting\n", getpid());
+		_exit(EXIT_SUCCESS);
+	} else {
+		sleep(3);	/* Give child a chance to start and exit */
+		snprintf(cmd, CMDLEN, "ps | grep -e %d -e %d", cpid, getpid());
+		system(cmd);
+		printf("\n");
+
+		/* Now send the "sure kill" signal to the zombie */
+		if (kill(cpid, SIGKILL) == -1)
+			errmsg_exit1("kill - SIGKILL failed, %s\n", ERR_MSG);
+		sleep(3);	/* Give child a chance to react to signal */
+		printf("After sending a SIGKILL to zombie (PID = %d)\n", cpid);
+		system(cmd);
+
+		exit(EXIT_SUCCESS);
+	}
 }

@@ -68,20 +68,22 @@ main(void)
 		_exit(EXIT_SUCCESS);
 	} else {	/* Parent: can see file changes made by child */
 		/*
-		 * The wait() function suspends execution of its calling thread until
-		 * status information is available for a child process or a signal is
-		 * received. 
+		 * The wait() function suspends execution of its calling thread
+		 * until status information is available for a child process or
+		 * a signal is received. 
 		 *
-		 * If wait() returns due to a stopped, continued, or terminated child
-		 * process, the process ID of the child is returned to the calling
-		 * process. Otherwise, a value of -1 is returned and errno is set to
-		 * indicate the error.
+		 * If wait() returns due to a stopped, continued, or terminated
+		 * child process, the process ID of the child is returned to the
+		 * calling process. Otherwise, a value of -1 is returned and
+		 * errno is set to indicate the error.
 		 */
 		if (wait(&status) == -1)	/* Wait for child exit */
 			errmsg_exit1("wait failed, %s\n", ERR_MSG);
-		printf("Child process has exited, code = %d.\n", WIFEXITED(status));
+		printf("Child process has exited, code = %d.\n",
+			WIFEXITED(status));
 
-		printf("File offset in parent process: %ld\n", lseek(fd, 0, SEEK_CUR));
+		printf("File offset in parent process: %ld\n",
+			lseek(fd, 0, SEEK_CUR));
 
 		if ((flags = fcntl(fd, F_GETFL)) == -1)
 			errmsg_exit1("fcntl - F_GETFL failed, %s\n", ERR_MSG);

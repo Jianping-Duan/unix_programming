@@ -48,7 +48,8 @@ main(void)
 		sa.sa_flags = SA_RESTART;
 		sa.sa_handler = tstp_handler;
 		if (sigaction(SIGTSTP, &sa, NULL) == -1)
-			errmsg_exit1("sigaction - SIGTSTP failed, %s\n", ERR_MSG);
+			errmsg_exit1("sigaction - SIGTSTP failed, %s\n",
+				ERR_MSG);
 	}
 
 	while (1) {

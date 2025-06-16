@@ -40,7 +40,8 @@ main(int argc, char *argv[])
 
 	if (argc < 3 || strchr("rfo", argv[1][0]) == NULL)
 		errmsg_exit1("Usage: %s policy priority [pid...]\n"
-			"\tpolicy is 'r' (RR), 'f' (FIFO), 'o' (OTHER)\n", argv[0]);
+			"\tpolicy is 'r' (RR), 'f' (FIFO), 'o' (OTHER)\n",
+			argv[0]);
 
 	/*
 	 * SCHED_FIFO:
@@ -53,27 +54,27 @@ main(int argc, char *argv[])
 	 * SCHED_RR:
 	 *	Round-robin scheduling across same priority processes.
 	 */
-	pol = (argv[1][0] == 'r') ? SCHED_RR : (argv[1][0] == 'f') ? SCHED_FIFO :
-		SCHED_OTHER;
+	pol = (argv[1][0] == 'r') ? SCHED_RR : (argv[1][0] == 'f') ?
+		SCHED_FIFO : SCHED_OTHER;
 	sp.sched_priority = getint(argv[2]);
 
 	/*
 	 * The sched_setscheduler() system call sets the scheduling policy and
-	 * scheduling parameters of the process specified by pid to policy and the
-	 * parameters specified in the sched_param structure pointed to by param,
-	 * respectively. The value of the sched_priority member in the param
-	 * structure must be any integer within the inclusive priority range for the
-	 * scheduling policy specified by policy.
+	 * scheduling parameters of the process specified by pid to policy and
+	 * the parameters specified in the sched_param structure pointed to by
+	 * param, respectively. The value of the sched_priority member in the
+	 * param structure must be any integer within the inclusive priority
+	 * range for the scheduling policy specified by policy.
 	 *
-	 * In this implementation, if the value of pid is negative the system call
-	 * will fail.
+	 * In this implementation, if the value of pid is negative the system
+	 * call will fail.
 	 *
 	 * If a process specified by pid exists and if the calling process has
-	 * permission, the scheduling policy and scheduling parameters will be set
-	 * for the process whose process ID is equal to pid.
+	 * permission, the scheduling policy and scheduling parameters will be
+	 * set for the process whose process ID is equal to pid.
 	 *
-	 * If pid is zero, the scheduling policy and scheduling parameters are set
-	 * for the calling process.
+	 * If pid is zero, the scheduling policy and scheduling parameters are
+	 * set for the calling process.
 	 *
 	 * In this implementation, the policy of when a process can affect the
 	 * scheduling parameters of another process is specified in IEEE Std

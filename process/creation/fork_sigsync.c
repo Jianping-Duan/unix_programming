@@ -51,16 +51,16 @@ main(void)
 		errmsg_exit1("sigprocmask - SIG_SETMASK failed, %s\n", ERR_MSG);
 
 	/*
-	 * If a signal is caught during the system calls listed below, the call may
-	 * be forced to terminate with the error EINTR, the call may return with a
-	 * data transfer shorter than requested, or the call may be restarted.
-	 * Restart of pending calls is requested by setting the SA_RESTART bit in
-	 * sa_flags. The affected system calls include open(2), read(2), write(2),
-	 * sendto(2), recvfrom(2), sendmsg(2) and recvmsg(2) on a communications
-	 * channel or a slow device (such as a terminal, but not a regular file) and
-	 * during a wait(2) or ioctl(2). However, calls that have already committed
-	 * are not restarted, but instead return a partial success (for example, a
-	 * short read count).
+	 * If a signal is caught during the system calls listed below, the call
+	 * may be forced to terminate with the error EINTR, the call may return
+	 * with a data transfer shorter than requested, or the call may be
+	 * restarted. Restart of pending calls is requested by setting the
+	 * SA_RESTART bit in sa_flags. The affected system calls include
+	 * open(2), read(2), write(2), sendto(2), recvfrom(2), sendmsg(2) and
+	 * recvmsg(2) on a communications channel or a slow device (such as a
+	 * terminal, but not a regular file) and during a wait(2) or ioctl(2).
+	 * However, calls that have already committed are not restarted, but
+	 * instead return a partial success (for example, a short read count).
 	 * 
 	 * After a fork(2) or vfork(2) all signals, the signal mask, the signal
 	 * stack, and the restart/interrupt flags are inherited by the child.
@@ -100,11 +100,13 @@ main(void)
 		sigemptyset(&emask);
 		if (sigsuspend(&emask) == -1 && errno != EINTR)
 			errmsg_exit1("sigsuspend failed, %s\n", ERR_MSG);
-		printf("[%s %d] Parent got signal.\n", currtime("%T"), getpid());
+		printf("[%s %d] Parent got signal.\n", currtime("%T"),
+			getpid());
 
 		/* If required, return signal mask to its original state */
 		if (sigprocmask(SIG_SETMASK, &omask, NULL) == -1)
-			errmsg_exit1("sigprocmask - SIG_SETMAKS failed, %s\n", ERR_MSG);
+			errmsg_exit1("sigprocmask - SIG_SETMAKS failed, %s\n",
+				ERR_MSG);
 
 		/* Parent carries on to do other things... */
 		printf("\t[%s %d] Parent carries on to do other things...\n",
@@ -117,8 +119,8 @@ main(void)
 static void
 sig_handler(int sig)
 {
-	printf("[%s %d] Caught signal: %d (%s)\n", currtime("%T"), getpid(), sig,
-		strsignal(sig));
+	printf("[%s %d] Caught signal: %d (%s)\n", currtime("%T"), getpid(),
+		sig, strsignal(sig));
 }
 
 static char *

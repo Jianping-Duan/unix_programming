@@ -47,84 +47,87 @@ main(int argc, char *argv[])
 
 	while ((opt = getopt(argc, argv, optstr)) != -1)
 		switch (opt) {
-			case 'l':
-				/*
-				 * LOG_ALERT:
-				 *	A condition that should be corrected immediately, such as a
-				 *	corrupted system database.
-				 *
-				 * LOG_CRIT:
-				 *	Critical conditions, e.g., hard device errors.
-				 *
-				 * LOG_DEBUG:
-				 *	Messages that contain information normally of use only when
-				 *	debugging a program.
-				 *
-				 * LOG_ERR:
-				 *	Errors.
-				 *
-				 * LOG_INFO:
-				 *	Informational messages.
-				 *
-				 * LOG_EMERG:
-				 *	A panic condition. This is normally broadcast to all users.
-				 *
-				 * LOG_NOTICE:
-				 *	Conditions that are not error conditions, but should
-				 *	possibly be handled specially.
-				 *
-				 * LOG_WARNING:
-				 *	Warning messages.
-				 */
-				switch (optarg[0]) {
-					case 'a': level = LOG_ALERT; break;
-					case 'c': level = LOG_CRIT; break;
-					case 'd': level = LOG_DEBUG; break;
-					case 'e': level = LOG_ERR; break;
-					case 'i': level = LOG_INFO; break;
-					case 'm': level = LOG_EMERG; break;
-					case 'n': level = LOG_NOTICE; break;
-					case 'w': level = LOG_WARNING; break;
-					default: errmsg_exit1("Bad facility, %c\n", optarg[0]);
-				}
-				break;
+		case 'l':
 			/*
-			 * LOG_PID:
-			 *	Log the process id with each message: useful for
-			 *	identifying instantiations of daemons. On FreeBSD, this
-			 *	option is enabled by default and cannot be disabled.
+			 * LOG_ALERT:
+			 *	A condition that should be corrected
+			 *	immediately, such as a corrupted system
+			 *	database.
 			 *
-			 * LOG_PERROR:
-			 *	Write the message to standard error output as well to the
-			 *	system log.
+			 * LOG_CRIT:
+			 *	Critical conditions, e.g., hard device errors.
 			 *
-			 * More log options see syslog(3).
+			 * LOG_DEBUG:
+			 *	Messages that contain information normally of
+			 *	use only when debugging a program.
+			 *
+			 * LOG_ERR:
+			 *	Errors.
+			 *
+			 * LOG_INFO:
+			 *	Informational messages.
+			 *
+			 * LOG_EMERG:
+			 *	A panic condition. This is normally broadcast to
+			 *	all users.
+			 *
+			 * LOG_NOTICE:
+			 *	Conditions that are not error conditions, but
+			 *	should possibly be handled specially.
+			 *
+			 * LOG_WARNING:
+			 *	Warning messages.
 			 */
-			case 'p':
-				options |= LOG_PID;
-				break;
-			case 'e':
-				options |= LOG_PERROR;
-				break;
-			default:
-				fprintf(stderr, "Bad option.\n");
-				usage_info(argv[0]);
+			switch (optarg[0]) {
+			case 'a': level = LOG_ALERT; break;
+			case 'c': level = LOG_CRIT; break;
+			case 'd': level = LOG_DEBUG; break;
+			case 'e': level = LOG_ERR; break;
+			case 'i': level = LOG_INFO; break;
+			case 'm': level = LOG_EMERG; break;
+			case 'n': level = LOG_NOTICE; break;
+			case 'w': level = LOG_WARNING; break;
+			default: errmsg_exit1("Bad facility, %c\n", optarg[0]);
+			}
+			break;
+		/*
+		 * LOG_PID:
+		 *	Log the process id with each message: useful for
+		 *	identifying instantiations of daemons. On FreeBSD, this
+		 *	option is enabled by default and cannot be disabled.
+		 *
+		 * LOG_PERROR:
+		 *	Write the message to standard error output as well to
+		 *	the system log.
+		 *
+		 * More log options see syslog(3).
+		 */
+		case 'p':
+			options |= LOG_PID;
+			break;
+		case 'e':
+			options |= LOG_PERROR;
+			break;
+		default:
+			fprintf(stderr, "Bad option.\n");
+			usage_info(argv[0]);
 		}
 	
 	if (argc != optind + 1)
 		usage_info(argv[0]);
 
 	/*
-	 * The openlog() function provides for more specialized processing of the
-	 * messages sent by syslog() and vsyslog(). The ident argument is a string
-	 * that will be prepended to every message. It may be formatted as ident[N]
-	 * in which case decimal number N replaces the process id within messages.
-	 * The logopt argument is a bit field specifying logging options, which is
-	 * formed by OR'ing one or more of the following values:
+	 * The openlog() function provides for more specialized processing of
+	 * the messages sent by syslog() and vsyslog(). The ident argument is a
+	 * string that will be prepended to every message. It may be formatted
+	 * as ident[N] in which case decimal number N replaces the process id
+	 * within messages. The logopt argument is a bit field specifying
+	 * logging options, which is formed by OR'ing one or more of the
+	 * following values:
 	 * 
-	 * The syslog() function writes message to the system message logger. The
-	 * message is then written to the system console, log files, logged-in
-	 * users, or forwarded to other machines as appropriate. 
+	 * The syslog() function writes message to the system message logger.
+	 * The message is then written to the system console, log files,
+	 * logged-in users, or forwarded to other machines as appropriate.
 	 *
 	 * The closelog() function can be used to close the log file.
 	 *
@@ -145,10 +148,9 @@ static void
 usage_info(const char *pname)
 {
 	fprintf(stderr, "Usage: %s [-p] [-e] [-l level] \"message\"\n", pname);
-    fprintf(stderr, "\t-p  log PID\n");
-    fprintf(stderr, "\t-e  log to stderr also\n");
-    fprintf(stderr, "\t-l  level (a=ALERT; c=CRIT; d=DEBUG; e=ERR;\n");
-    fprintf(stderr, "\t\t\ti=INFO; m=EMERG; n=NOTICE; w=WARNING;)\n");
-    exit(EXIT_FAILURE);
-
+	fprintf(stderr, "\t-p  log PID\n");
+	fprintf(stderr, "\t-e  log to stderr also\n");
+	fprintf(stderr, "\t-l  level (a=ALERT; c=CRIT; d=DEBUG; e=ERR;\n");
+	fprintf(stderr, "\t\t\ti=INFO; m=EMERG; n=NOTICE; w=WARNING;)\n");
+	exit(EXIT_FAILURE);
 }

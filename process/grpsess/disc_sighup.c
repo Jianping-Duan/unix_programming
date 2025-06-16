@@ -47,10 +47,10 @@ main(int argc, char *argv[])
 	setbuf(stdout, NULL);	 /* Make stdout unbuffered */
 
 	/*
-	 * The tcgetpgrp() function returns the value of the process group ID of the
-	 * foreground process group associated with the terminal device. If there
-	 * is no foreground process group, tcgetpgrp() returns an invalid process
-	 * ID.
+	 * The tcgetpgrp() function returns the value of the process group ID of
+	 * the foreground process group associated with the terminal device. If
+	 * there is no foreground process group, tcgetpgrp() returns an invalid
+	 * process ID.
 	 */
 	printf("PID of parent process is %d\n", getpid());
 	printf("Foreground process group ID is %d\n", tcgetpgrp(STDIN_FILENO));
@@ -62,7 +62,8 @@ main(int argc, char *argv[])
 		if (cpid == 0) {
 			if (argv[i][0] == 'd')	/* 'd' --> to different pgrp */
 				if (setpgid(0, 0) == -1)
-					errmsg_exit1("setpgid failed, %s\n", ERR_MSG);
+					errmsg_exit1("setpgid failed, %s\n",
+						ERR_MSG);
 
 			sigemptyset(&sa.sa_mask);
 			sa.sa_flags = 0;
@@ -86,5 +87,6 @@ main(int argc, char *argv[])
 static void
 sig_handler(int sig)
 {
-	printf("PID %d: caught signal %d (%s)\n", getpid(), sig, strsignal(sig));
+	printf("PID %d: caught signal %d (%s)\n", getpid(), sig,
+		strsignal(sig));
 }

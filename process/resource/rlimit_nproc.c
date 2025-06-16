@@ -50,14 +50,15 @@ main(int argc, char *argv[])
 	/* 
 	 * Set new process limits (hard == soft if not specified)
 	 *
-	 * Limits on the consumption of system resources by the current process and
-	 * each process it creates may be obtained with the getrlimit() system call,
-	 * and set with the setrlimit() system call.
+	 * Limits on the consumption of system resources by the current process
+	 * and each process it creates may be obtained with the getrlimit()
+	 * system call, and set with the setrlimit() system call.
 	 */
 	rlim.rlim_cur = (strcasecmp(argv[1], "inf") == 0) ? RLIM_INFINITY :
 		getint(argv[1]);
 	rlim.rlim_max = (argc == 2) ? rlim.rlim_cur :
-		(strcasecmp(argv[2], "inf") == 0) ? RLIM_INFINITY : getint(argv[2]);
+		(strcasecmp(argv[2], "inf") == 0) ? RLIM_INFINITY :
+		getint(argv[2]);
 	if (setrlimit(RLIMIT_NPROC, &rlim) == -1)
 		errmsg_exit1("setrlimit - RLIMIT_NPROC failed, %s\n", ERR_MSG);
 
@@ -67,17 +68,17 @@ main(int argc, char *argv[])
 
 	for (i = 1; ; i++)
 		switch (cpid = fork()) {
-			case -1:
-				errmsg_exit1("fork failed, %s\n", ERR_MSG);
-			case 0:
-				_exit(EXIT_SUCCESS);
-			default:
-				/*
-				 * Parent: display message about each new child and let the
-				 * resulting zombies accumulate 
-				 */
-				printf("Child %d (PID=%d) started\n", i, cpid);
-				break;
+		case -1:
+			errmsg_exit1("fork failed, %s\n", ERR_MSG);
+		case 0:
+			_exit(EXIT_SUCCESS);
+		default:
+			/*
+			 * Parent: display message about each new child and let
+			 * the resulting zombies accumulate 
+			 */
+			printf("Child %d (PID=%d) started\n", i, cpid);
+			break;
 		}
 }
 
@@ -85,8 +86,8 @@ main(int argc, char *argv[])
  * The resource argument is one of the following:
  *
  * RLIMIT_AS:
- *	The maximum amount (in bytes) of virtual memory the process is allowed to
- *	map.
+ *	The maximum amount (in bytes) of virtual memory the process is allowed
+ *	to map.
  *
  * RLIMIT_CORE:
  *	The largest size (in bytes) core(5) file that may be created.
@@ -95,8 +96,9 @@ main(int argc, char *argv[])
  *	The maximum amount of cpu time (in seconds) to be used by each process.
  *
  * RLIMIT_DATA:
- *	The maximum size (in bytes) of the data segment for a process; this defines
- *	how far a program may extend its break with the sbrk(2) function.
+ *	The maximum size (in bytes) of the data segment for a process; this
+ *	defines how far a program may extend its break with the sbrk(2)
+ *	function.
  *
  * RLIMIT_FSIZE:
  *	The largest size (in bytes) file that may be created.
@@ -105,8 +107,8 @@ main(int argc, char *argv[])
  *	The maximum number of kqueues this user id is allowed to create.
  *
  * RLIMIT_MEMLOCK:
- *	The maximum size (in bytes) which a process may lock into memory using the
- *	mlock(2) system call.
+ *	The maximum size (in bytes) which a process may lock into memory using
+ *	the mlock(2) system call.
  *
  * RLIMIT_NOFILE:
  *	The maximum number of open files for this process.
@@ -115,27 +117,28 @@ main(int argc, char *argv[])
  *	The maximum number of simultaneous processes for this user id.
  *
  * RLIMIT_NPTS:
- *	The maximum number of pseudo-terminals this user id is allowed to create.
+ *	The maximum number of pseudo-terminals this user id is allowed to
+ *	create.
  *
  * RLIMIT_PIPEBUF:
- *	The maximum total size of in-kernel buffers for bi-directional pipes/fifos
- *	that this user id is allowed to consume. The buffers for kernel FIFOs
- *	created on the first open of a filesystem object created by (mkfifo(2))
- *	are also charged to the user ID of the process opening it, not the FIFO's
- *	filesystem owner. Despite somewhat unexpected, this is in fact fair, since
- *	user of the fifo is not necessary its creator.
+ *	The maximum total size of in-kernel buffers for bi-directional
+ *	pipes/fifos that this user id is allowed to consume. The buffers for
+ *	kernel FIFOs created on the first open of a filesystem object created
+ *	by (mkfifo(2)) are also charged to the user ID of the process opening
+ *	it, not the FIFO's filesystem owner. Despite somewhat unexpected, this
+ *	is in fact fair, since user of the fifo is not necessary its creator.
  * 
  * RLIMIT_RSS:
- *	When there is memory pressure and swap is available, prioritize eviction of
- *	a process' resident pages beyond this amount (in bytes). When memory is not
- *	under pressure, this rlimit is effectively ignored. Even when there is
- *	memory pressure, the amount of available swap space and some sysctl settings
- *	like vm.swap_enabled and vm.swap_idle_enabled can affect what happens to
- *	processes that have exceeded this size.
+ *	When there is memory pressure and swap is available, prioritize eviction
+ *	of a process' resident pages beyond this amount (in bytes). When memory
+ *	is not under pressure, this rlimit is effectively ignored. Even when
+ *	there is memory pressure, the amount of available swap space and some
+ *	sysctl settings like vm.swap_enabled and vm.swap_idle_enabled can affect
+ *	what happens to processes that have exceeded this size.
  *
- *	Processes that exceed their set RLIMIT_RSS are not signalled or halted. The
- *	limit is merely a hint to the VM daemon to prefer to deactivate pages from
- *	processes that have exceeded their set RLIMIT_RSS.
+ *	Processes that exceed their set RLIMIT_RSS are not signalled or halted.
+ *	The limit is merely a hint to the VM daemon to prefer to deactivate
+ *	pages from processes that have exceeded their set RLIMIT_RSS.
  *
  * RLIMIT_SBSIZE:
  *	The maximum size (in bytes) of socket buffer usage for this user. This
@@ -143,15 +146,15 @@ main(int argc, char *argv[])
  *	this user may hold at any time.
  *
  * RLIMIT_STACK:
- *	The maximum size (in bytes) of the stack segment for a process; this defines
- *	how far a program's stack segment may be extended. Stack extension is
- *	performed automatically by the system.
+ *	The maximum size (in bytes) of the stack segment for a process; this
+ *	defines how far a program's stack segment may be extended. Stack
+ *	extension is performed automatically by the system.
  *
  * RLIMIT_SWAP:
- *	The maximum size (in bytes) of the swap space that may be reserved or used
- *	by all of this user id's processes. This limit is enforced only if bit 1
- *	of the vm.overcommit sysctl is set. Please see tuning(7) for a complete
- *	description of this sysctl.
+ *	The maximum size (in bytes) of the swap space that may be reserved or
+ *	used by all of this user id's processes. This limit is enforced only if
+ *	bit 1 of the vm.overcommit sysctl is set. Please see tuning(7) for a
+ *	complete description of this sysctl.
  *
  * RLIMIT_UMTXP:
  *	The limit of the number of process-shared posix thread library objects

@@ -39,37 +39,36 @@ main(int argc, char *argv[])
 	struct sched_param sp;
 
 	/*
-	 * The sched_getscheduler() system call returns the scheduling policy of the
-	 * process specified by pid.
+	 * The sched_getscheduler() system call returns the scheduling policy
+	 * of the process specified by pid.
 	 *
-	 * The sched_getparam() system call will return the scheduling parameters of
-	 * a process specified by pid in the sched_param structure pointed to by
-	 * param.
+	 * The sched_getparam() system call will return the scheduling
+	 * parameters of a process specified by pid in the sched_param structure
+	 * pointed to by param.
 	 *
 	 * If a process specified by pid exists and if the calling process has
-	 * permission, the scheduling parameters for the process whose process ID is
-	 * equal to pid are returned.
+	 * permission, the scheduling parameters for the process whose process
+	 * ID is equal to pid are returned.
 	 *
 	 * In this implementation, the policy of when a process can obtain the
 	 * scheduling parameters of another process are detailed in IEEE Std
 	 * 1003.1b-1993 (“POSIX.1b”) as a read-style operation.
 	 *
-	 * If pid is zero, the scheduling parameters for the calling process will be
-	 * returned. In this implementation, the sched_getscheduler system call will
-	 * fail if pid is negative.
-	 *
-	 *
+	 * If pid is zero, the scheduling parameters for the calling process
+	 * will be returned. In this implementation, the sched_getscheduler
+	 * system call will fail if pid is negative.
 	 */
 	for (i = 1; i < argc; i++) {
 		if ((pol = sched_getscheduler(getint(argv[i]))) == -1)
-			errmsg_exit1("sched_getscheduler failed, %s\n", ERR_MSG);
+			errmsg_exit1("sched_getscheduler failed, %s\n",
+				ERR_MSG);
 
 		if (sched_getparam(getint(argv[i]), &sp) == -1)
 			errmsg_exit1("sched_getparam failed, %s\n", ERR_MSG);
 
 		printf("%s: %-5s ", argv[i], (pol == SCHED_RR) ? "RR" :
-			(pol == SCHED_OTHER) ? "OTHER" : (pol == SCHED_FIFO) ? "FIFO" :
-			"Unknow policy");
+			(pol == SCHED_OTHER) ? "OTHER" : (pol == SCHED_FIFO) ?
+			"FIFO" : "Unknow policy");
 		printf("%2d\n", sp.sched_priority);
 	}
 

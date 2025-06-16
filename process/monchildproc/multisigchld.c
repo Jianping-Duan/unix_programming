@@ -72,15 +72,15 @@ main(int argc, char *argv[])
 	/* Create one child process for each command-line argument */
 	for (i = 1; i < argc; i++)
 		switch (fork()) {
-			case -1:
-				errmsg_exit1("fork failed, %s\n", ERR_MSG);
-			case 0:
-				sleep(getint(argv[i]));
-				printf("[%s] child %d (PID = %d) exiting\n", currtime("%T"), i,
-					getpid());
-				_exit(EXIT_SUCCESS);
-			default:	/* Parent - loops to create next child */
-				break;
+		case -1:
+			errmsg_exit1("fork failed, %s\n", ERR_MSG);
+		case 0:
+			sleep(getint(argv[i]));
+			printf("[%s] child %d (PID = %d) exiting\n",
+				currtime("%T"), i, getpid());
+			_exit(EXIT_SUCCESS);
+		default:	/* Parent - loops to create next child */
+			break;
 		}
 
 	/* Parent comes here: wait for SIGCHLD until all children are dead */
@@ -134,24 +134,26 @@ show_wait_status(int status)
 	 *	traced (see ptrace(2)).
 	 *
 	 * WIFCONTINUED(status):
-	 *	True if the process has not terminated, and has continued after a
-	 *	job control stop.  This macro can be true only if the wait call
+	 *	True if the process has not terminated, and has continued after
+	 *	a job control stop. This macro can be true only if the wait call
 	 *	specified the WCONTINUED option.
 	 */
 	if (WIFEXITED(status))
-		printf("child process exited, status = %d\n", WEXITSTATUS(status));
+		printf("child process exited, status = %d\n",
+			WEXITSTATUS(status));
 	else if(WIFSIGNALED(status)) {
-		printf("child process killed by signal %d (%s)\n", WTERMSIG(status),
-			strsignal(WTERMSIG(status)));
+		printf("child process killed by signal %d (%s)\n",
+			WTERMSIG(status), strsignal(WTERMSIG(status)));
 		if (WCOREDUMP(status))
 			printf(" (core dumped)\n");
 	} else if (WIFSTOPPED(status))
-		printf("child process stopped by signal %d (%s)\n", WSTOPSIG(status),
-			strsignal(WSTOPSIG(status)));
+		printf("child process stopped by signal %d (%s)\n",
+			WSTOPSIG(status), strsignal(WSTOPSIG(status)));
 	else if (WIFCONTINUED(status))
 		printf("child process continued\n");
 	else
-		printf("what happend to this child ? (status = 0x%x)\n", status);
+		printf("what happend to this child ? (status = 0x%x)\n",
+			status);
 }
 
 static void
@@ -167,7 +169,8 @@ sigchld_handler(int sig)
 
 	/* Do nonblocking waits until no more dead children are found */
 	while ((cpid = waitpid(-1, &status, WNOHANG)) > 0) {
-		printf("[%s] Handler: reaped child %d -\n", currtime("%T"), cpid);
+		printf("[%s] Handler: reaped child %d -\n", currtime("%T"),
+			cpid);
 		printf("\t");
 		show_wait_status(status);
 		children--;

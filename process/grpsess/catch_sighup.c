@@ -54,20 +54,22 @@ main(int argc, char *argv[])
 	if (cpid == 0 && argc > 1) {
 		assert(argv[1] != NULL);
 		/*
-		 * The setpgid() system call sets the process group of the specified
-		 * process pid to the specified pgrp. If pid is zero, then the call
-		 * applies to the current process. If pgrp is zero, then the process
-		 * id of the process specified by pid is used instead.
+		 * The setpgid() system call sets the process group of the
+		 * specified process pid to the specified pgrp. If pid is zero,
+		 * then the call applies to the current process. If pgrp is
+		 * zero, then the process id of the process specified by pid is
+		 * used instead.
 		 *
-		 * If the affected process is not the invoking process, then it must be
-		 * a child of the invoking process, it must not have performed an
-		 * exec(3) operation, and both processes must be in the same session.
-		 * The requested process group ID must already exist in the session of
-		 * the caller, or it must be equal to the target process ID.
+		 * If the affected process is not the invoking process, then it
+		 * must be a child of the invoking process, it must not have
+		 * performed an exec(3) operation, and both processes must be in
+		 * the same session. The requested process group ID must already
+		 * exist in the session of the caller, or it must be equal to
+		 * the target process ID.
 		 *
-		 * The setpgid() function returns the value 0 if successful; otherwise
-		 * the value -1 is returned and the global variable errno is set to
-		 * indicate the error.
+		 * The setpgid() function returns the value 0 if successful;
+		 * otherwise the value -1 is returned and the global variable
+		 * errno is set to indicate the error.
 		 */
 		if (setpgid(0, 0) == -1)
 			errmsg_exit1("setpgid(0, 0) failed, %s\n", ERR_MSG);
@@ -80,11 +82,12 @@ main(int argc, char *argv[])
 	 * An unhandled SIGALRM ensures this process will die if nothing else
 	 * terminates it.
 	 *
-	 * The alarm() function sets a timer to deliver the signal SIGALRM to the
-	 * calling process after the specified number of seconds. If an alarm has
-	 * already been set with alarm() but has not been delivered, another call to
-	 * alarm() will supersede the prior call. The request alarm(0) voids the
-	 * current alarm and the signal SIGALRM will not be delivered.
+	 * The alarm() function sets a timer to deliver the signal SIGALRM to
+	 * the calling process after the specified number of seconds. If an
+	 * alarm has already been set with alarm() but has not been delivered,
+	 * another call to alarm() will supersede the prior call. The request
+	 * alarm(0) voids the current alarm and the signal SIGALRM will not be
+	 * delivered.
 	 */
 	alarm(30);
 

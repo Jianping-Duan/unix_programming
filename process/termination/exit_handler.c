@@ -45,12 +45,12 @@ main(void)
 	 *
 	 * These functions must not call exit(); if it should be necessary to
 	 * terminate the process while in such a function, the _exit(2) function
-	 * should be used. (Alternatively, the function may cause abnormal process
-	 * termination, for example by calling abort(3).)
+	 * should be used. (Alternatively, the function may cause abnormal
+	 * process termination, for example by calling abort(3).)
 	 *
-	 * The atexit() function returns the value 0 if successful; otherwise the
-	 * value -1 is returned and the global variable errno is set to indicate the
-	 * error.
+	 * The atexit() function returns the value 0 if successful; otherwise
+	 * the value -1 is returned and the global variable errno is set to
+	 * indicate the error.
 	 */
 	if (atexit(exit_fun1) != 0)
 		errmsg_exit1("atexit - exit_fun1 failed, %s\n", ERR_MSG);

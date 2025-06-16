@@ -55,27 +55,27 @@ main(int argc, char *argv[])
 	if (sigaction(SIGCONT, &sa, NULL) == -1)
 		errmsg_exit1("sigaction - SIGCONT failed, %s\n", ERR_MSG);
 
-	printf("Parent: PID=%d, PPID=%d, PGID=%d, SID=%d\n", getpid(), getppid(),
-		getpgrp(), getsid(0));
+	printf("Parent: PID=%d, PPID=%d, PGID=%d, SID=%d\n", getpid(),
+		getppid(), getpgrp(), getsid(0));
 
 	for (i = 1; i < argc; i++)
 		switch (fork()) {
-			case -1:
-				errmsg_exit1("fork failed, %s\n", ERR_MSG);
-			case 0:
-				printf("Child: PID=%d, PPID=%d, PGID=%d, SID=%d\n", getpid(),
-					getppid(), getpgrp(), getsid(0));
-				
-				if (argv[i][0] == 's') {
-					printf("PID=%d stopping...\n", getpid());
-					raise(SIGSTOP);
-				} else {
-					alarm(120);	/* So we die if not SIGHUPed */
-					printf("PID=%d pausing...\n", getpid());
-					pause();
-				}
-			default:
-				break;	/* Parent carries on round loop */
+		case -1:
+			errmsg_exit1("fork failed, %s\n", ERR_MSG);
+		case 0:
+			printf("Child: PID=%d, PPID=%d, PGID=%d, SID=%d\n",
+				getpid(), getppid(), getpgrp(), getsid(0));
+			
+			if (argv[i][0] == 's') {
+				printf("PID=%d stopping...\n", getpid());
+				raise(SIGSTOP);
+			} else {
+				alarm(120);	/* So we die if not SIGHUPed */
+				printf("PID=%d pausing...\n", getpid());
+				pause();
+			}
+		default:
+			break;	/* Parent carries on round loop */
 		}
 	
 	/* Parent falls through to here after creating all children */
@@ -90,5 +90,6 @@ main(int argc, char *argv[])
 static void
 sig_handler(int sig)
 {
-	printf("PID=%d, caught signal %d (%s)\n", getpid(), sig, strsignal(sig));
+	printf("PID=%d, caught signal %d (%s)\n", getpid(), sig,
+		strsignal(sig));
 }
