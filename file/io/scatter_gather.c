@@ -43,11 +43,11 @@ main(int argc, char *argv[])
 	int fd, oflags, num;
 	mode_t fperms;
 #define STRLEN	128
+#define IOVSZ	3
 	char *fname, *str1, str2[STRLEN];
 	ssize_t nwr, nrd;
-#define IOVSZ	3
 	struct {
-		int		i_num;
+		int	i_num;
 		char	i_str[STRLEN];
 	} dat;
 	struct iovec iow[IOVSZ], ior[IOVSZ];
@@ -62,19 +62,19 @@ main(int argc, char *argv[])
 		usage_info(argv[0]);
 	while ((op = getopt(argc, argv, optstr)) != -1) {
 		switch (op) {
-			case 'f':
-				fname = optarg;
-				break;
-			case 'i':
-				if (sscanf(optarg, "%d", &num) != 1)
-					errmsg_exit1("Illegal number. -i %s\n", optarg);
-				break;
-			case 's':
-				str1 = optarg;
-				break;
-			default:
-				fprintf(stderr, "Parameters error.\n");
-				usage_info(argv[0]);
+		case 'f':
+			fname = optarg;
+			break;
+		case 'i':
+			if (sscanf(optarg, "%d", &num) != 1)
+				errmsg_exit1("Illegal number. -i %s\n", optarg);
+			break;
+		case 's':
+			str1 = optarg;
+			break;
+		default:
+			fprintf(stderr, "Parameters error.\n");
+			usage_info(argv[0]);
 		}
 	}
 	if (optind < argc)

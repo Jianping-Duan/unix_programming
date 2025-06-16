@@ -45,9 +45,9 @@ main(int argc, char *argv[])
 		errmsg_exit1("Usage: %s pathname\n", argv[0]);
 
 	/* 
-	 * User lstat() to check whether the supplied pathname is a symbolic link.
-	 * Alternatively, we could have checked to whether readlink() failed with
-	 * EINVAL.
+	 * User lstat() to check whether the supplied pathname is a symbolic
+	 * link. Alternatively, we could have checked to whether readlink()
+	 * failed with EINVAL.
 	 */
 	if (lstat(argv[1], &st) == -1)
 		errmsg_exit1("stat failed, %s\n", ERR_MSG);

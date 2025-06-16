@@ -53,8 +53,11 @@ main(int argc, char *argv[])
 	strcat(cmd, "; echo");
 
 	/*
-	 * 'fd1' and 'fd2' share same open file table entry, and thus file offset.
-	 * 'fd3' has its own open file table entry, and thus a separate file offset.
+	 * 'fd1' and 'fd2' share same open file table entry, and thus file
+	 * offset.
+	 *
+	 * 'fd3' has its own open file table entry, and thus a separate file
+	 * offset.
 	 */
 
 	flags = O_RDWR | O_CREAT | O_TRUNC;

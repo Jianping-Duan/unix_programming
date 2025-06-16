@@ -54,7 +54,8 @@ main(int argc, char *argv[])
 	fdset = xmalloc(argc * sizeof(int));
 	for (i = 1; i < argc; i++)
 		if ((fdset[i] = open(argv[i], O_RDWR)) == -1)
-			errmsg_exit1("open file %s failed, %s\n", argv[i], ERR_MSG);
+			errmsg_exit1("open file %s failed, %s\n", argv[i],
+				ERR_MSG);
 
 	/* Inform user what type of locking is in effect for each file. */
 	printf("File\t\tLocking\n");
@@ -98,12 +99,14 @@ main(int argc, char *argv[])
 		}
 
 		if (filenum < 1 || filenum >= argc) {
-			printf("File number must be in range 1 and %d\n", argc - 1);
+			printf("File number must be in range 1 and %d\n",
+				argc - 1);
 			continue;
 		}
 
 		if (!((nrd >= 4 && argc == 2) || (nrd >= 5 && argc > 2)) ||
-			strchr("gsw", cmdch) == NULL || strchr("rwu", lock) == NULL ||
+			strchr("gsw", cmdch) == NULL ||
+			strchr("rwu", lock) == NULL ||
 			strchr("sce", whence) == NULL) {
 			printf("Invalid command!\n");
 			continue;
@@ -111,32 +114,33 @@ main(int argc, char *argv[])
 
 		/* 
 		 * F_GETLK:
-		 * Get the first lock that blocks the lock description pointed to
-		 * by the third argument, arg, taken as a pointer to a struct flock.
-		 * The information retrieved overwrites the information passed to 
-		 * fcntl() in the flock structure. If no lock is found that would
-		 * prevent this lock from being created, the structure is left
-		 * unchanged by this system call except for the lock type which is set
-		 * to F_UNLCK.
+		 * Get the first lock that blocks the lock description pointed
+		 * to by the third argument, arg, taken as a pointer to a struct
+		 * flock. The information retrieved overwrites the information
+		 * passed to fcntl() in the flock structure. If no lock is found
+		 * that would prevent this lock from being created, the
+		 * structure is left unchanged by this system call except for
+		 * the lock type which is set to F_UNLCK.
 		 *
 		 * F_SETLK:
 		 * Set or clear a file segment lock according to the lock
 		 * description pointed to by the third argument, arg, taken as a
-		 * pointer to a struct flock.  F_SETLK is used to establish shared
-		 * (or read) locks (F_RDLCK) or exclusive (or write) locks, (F_WRLCK),
-		 * as well as remove either type of lock (F_UNLCK). If a shared or
-		 * exclusive lock cannot be set, fcntl() returns immediately with
-		 * EAGAIN.
+		 * pointer to a struct flock.  F_SETLK is used to establish
+		 * shared (or read) locks (F_RDLCK) or exclusive (or write)
+		 * locks, (F_WRLCK), as well as remove either type of lock
+		 * (F_UNLCK). If a shared or exclusive lock cannot be set,
+		 * fcntl() returns immediately with EAGAIN.
 		 *
 		 * F_SETLKW:
-		 * This command is the same as F_SETLK except that if a shared or
-		 * exclusive lock is blocked by other locks, the process waits
-		 * until the request can be satisfied.  If a signal that is to be
-		 * caught is received while fcntl() is waiting for a region, the
-		 * fcntl() will be interrupted if the signal handler has not
-		 * specified the SA_RESTART (see sigaction(2)).
+		 * This command is the same as F_SETLK except that if a shared
+		 * or exclusive lock is blocked by other locks, the process
+		 * waits until the request can be satisfied.  If a signal that
+		 * is to be caught is received while fcntl() is waiting for a
+		 * region, the fcntl() will be interrupted if the signal handler
+		 * has not specified the SA_RESTART (see sigaction(2)).
 		 */
-		cmd = (cmdch == 'g') ? F_GETLK : (cmdch == 's') ? F_SETLK : F_SETLKW;
+		cmd = (cmdch == 'g') ? F_GETLK : (cmdch == 's')
+			? F_SETLK : F_SETLKW;
 
 		fl.l_start = st;
 		fl.l_len = len;
@@ -145,43 +149,48 @@ main(int argc, char *argv[])
 		 * F_WRLCK: exclusive or write lock.
 		 * F_UNLCK: unlock.
 		 */
-		fl.l_type = (lock == 'r') ? F_RDLCK : (lock == 'w') ? F_WRLCK : F_UNLCK;
+		fl.l_type = (lock == 'r') ? F_RDLCK : (lock == 'w')
+			? F_WRLCK : F_UNLCK;
 		fl.l_whence = (whence == 's') ? SEEK_SET : (whence == 'c')
 			? SEEK_CUR : SEEK_END;
 
 		fd = fdset[filenum];
 		/*
-		 * NOTE: if you open a file with Read Only mode, the fcntl() system
-		 * call will fail.
+		 * NOTE: if you open a file with Read Only mode, the fcntl()
+		 * system call will fail.
 		 *
-         * The argument cmd is F_SETLK or F_SETLKW, the type of lock (l_type)
-		 * is a shared lock (F_RDLCK), and fd is not a valid file descriptor
-		 * open for reading.
+		 * The argument cmd is F_SETLK or F_SETLKW, the type of lock
+		 * (l_type) is a shared lock (F_RDLCK), and fd is not a valid
+		 * file descriptor open for reading.
 		 *
-		 * The argument cmd is F_SETLK or F_SETLKW, the type of lock (l_type)
-		 * is an exclusive lock (F_WRLCK), and fd is not a valid file
-		 * descriptor open for writing.
+		 * The argument cmd is F_SETLK or F_SETLKW, the type of lock
+		 * (l_type) is an exclusive lock (F_WRLCK), and fd is not a
+		 * valid file descriptor open for writing.
 		 */
-		if ((status = fcntl(fd, cmd, &fl)) == -1)	/* Perform request... */
+		if ((status = fcntl(fd, cmd, &fl)) == -1) /* Perform request */
 			errmsg_exit1("fcntl failed, %s\n", ERR_MSG);
 
 		if (cmd == F_GETLK) {
 			if (fl.l_type == F_UNLCK)
-				printf("[PID=%d] Lock can be placed\n", getpid());
+				printf("[PID=%d] Lock can be placed\n",
+					getpid());
 			else
 				printf("[PID=%d] Denied by %s lock on %ld:%ld "
 					"(hold by PID %d)\n", getpid(),
-					(fl.l_type == F_RDLCK) ? "READ" : "WRITE",
+					(fl.l_type == F_RDLCK)
+						? "READ" : "WRITE",
 					fl.l_start, fl.l_len, fl.l_pid);
 		} else {
 			if (status == 0) {
 				printf("[PID=%d] %s\n", getpid(), (lock == 'u')
 					? "unlocked" : "got lock");
 			} else if (errno == EAGAIN || errno == EACCES)
-                printf("[PID=%d] failed (incompatible lock)\n", getpid());
-            else if (errno == EDEADLK)	/* F_SETLKW */
-                printf("[PID=%ld] failed (deadlock)\n", (long) getpid());
-            else
+				printf("[PID=%d] failed (incompatible lock)\n",
+					getpid());
+			else if (errno == EDEADLK)	/* F_SETLKW */
+				printf("[PID=%d] failed (deadlock)\n",
+					getpid());
+			else
 				errmsg_exit1("fcntl failed, %s\n", ERR_MSG);
 		}
 	}
@@ -213,23 +222,24 @@ mdlock_enabled(int fd)
 static void 
 display(int argc, char *argv[], const int *fdset)
 {
-	int i;
+	int i, ml;
 
-    if (argc == 2)	/* Only a single filename argument */
-        printf("\nFormat: cmd lock start length [whence]\n\n");
-    else {
-        printf("\nFormat: %scmd lock start length [whence]\n\n",
+	if (argc == 2)	/* Only a single filename argument */
+		printf("\nFormat: cmd lock start length [whence]\n\n");
+	else {
+		printf("\nFormat: %scmd lock start length [whence]\n\n",
 			(argc > 2) ? "file-num " : "");
-        printf("\tfile-num is a number from the following list\n");
-        for (i = 1; i < argc; i++) {
-            printf("\t\t%2d  %-10s [%s locking]\n", i, argv[i],
-                mdlock_enabled(fdset[i]) ? "mandatory" : "advisory");
+		printf("\tfile-num is a number from the following list\n");
+		for (i = 1; i < argc; i++) {
+			ml = mdlock_enabled(fdset[i]);
+			printf("\t\t%2d  %-10s [%s locking]\n", i, argv[i],
+				 ml ? "mandatory" : "advisory");
 		}
-    }
-    printf("\t'cmd' is 'g' (GETLK), 's' (SETLK), or 'w' (SETLKW)\n");
-    printf("\t'lock' is 'r' (READ), 'w' (WRITE), or 'u' (UNLOCK)\n");
-    printf("\t'start' and 'length' specify byte range to lock\n");
-    printf("\t'whence' is 's' (SEEK_SET, default), 'c' (SEEK_CUR), "
+	}
+	printf("\t'cmd' is 'g' (GETLK), 's' (SETLK), or 'w' (SETLKW)\n");
+	printf("\t'lock' is 'r' (READ), 'w' (WRITE), or 'u' (UNLOCK)\n");
+	printf("\t'start' and 'length' specify byte range to lock\n");
+	printf("\t'whence' is 's' (SEEK_SET, default), 'c' (SEEK_CUR), "
 		"or 'e' (SEEK_END)\n");
 	printf("\t'quit' or 'exit' to quit this program.\n\n");
 }

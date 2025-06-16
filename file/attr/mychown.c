@@ -44,7 +44,8 @@ main(int argc, char *argv[])
 
 	if (argc < 3)
 		errmsg_exit1("Usages: %s owner group [file...]\n"
-			"\towner or group can be '-', meaning leave unchanged\n", argv[0]);
+			"\towner or group can be '-', meaning leave "
+			"unchanged\n", argv[0]);
 
 	if (strcmp(argv[1], "-") == 0)
 		uid = -1;
@@ -64,7 +65,8 @@ main(int argc, char *argv[])
 
 	for (i = 3; i < argc; i++)
 		if (chown(argv[i], uid, gid) == -1) {
-			errmsg_exit1("chown %s failure, %s\n", argv[i], ERR_MSG);
+			errmsg_exit1("chown %s failure, %s\n", argv[i],
+				ERR_MSG);
 			errfnd = 1;
 		}
 

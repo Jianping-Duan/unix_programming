@@ -45,8 +45,8 @@ main(int argc, char *argv[])
 	if (stat(argv[1], &st) == -1)	/* Retrieve current file times */
 		errmsg_exit1("stat failure, %s\n", ERR_MSG);
 	
-	utb.actime = st.st_atime;	/* Leave access time unchanged */
-	utb.modtime = st.st_atime;	/* Make modify time same as access time */
+	utb.actime = st.st_atime; /* Leave access time unchanged */
+	utb.modtime = st.st_atime; /* Make modify time same as access time */
 	/*
 	 * update file times.
 	 * more details see man(3)

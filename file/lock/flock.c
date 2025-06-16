@@ -46,7 +46,8 @@ main(int argc, char *argv[])
 		errmsg_exit1("Usage: %s file lock [sleep-time]\n"
 			"\tlock' is 's' (shared) or 'x' (exclusive)\n"
 			"\t\toptionally followed by 'n' (nonblocking)\n"
-			"\t'sleep-time' specifies time to hold lock\n", argv[0]);
+			"\t'sleep-time' specifies time to hold lock\n",
+			argv[0]);
 	}
 
 	lock = argv[2][0] == 's' ? LOCK_SH : LOCK_EX;
@@ -54,10 +55,12 @@ main(int argc, char *argv[])
 	if (argv[2][1] == 'n')
 		lock |= LOCK_NB;
 
-	if ((fd = open(argv[1], O_RDONLY)) == -1)	/* open file to be locked. */
+	/* open file to be locked. */
+	if ((fd = open(argv[1], O_RDONLY)) == -1)
 		errmsg_exit1("open file %s failed, %s\n", argv[1], ERR_MSG);
 
-	printf("PID %d requesting %7s at %s\n", getpid(), lname, currtime("%T"));
+	printf("PID %d requesting %7s at %s\n", getpid(), lname,
+		currtime("%T"));
 	if (flock(fd, lock) == -1) {
 		if (errno == EWOULDBLOCK)
 			errmsg_exit1("PID %d already locked.\n", getpid());
@@ -92,6 +95,6 @@ currtime(const char *fmt)
 	}
 
 	/* more formats see man(3) */
-	sz = strftime(buf, BUFSIZE, (fmt != NULL) ? fmt : "%c", tmptr);	
+	sz = strftime(buf, BUFSIZE, (fmt != NULL) ? fmt : "%c", tmptr);
 	return ((sz == 0) ? NULL : buf);
 }

@@ -42,7 +42,8 @@ main(int argc, char *argv[])
 	char *buf;
 
 	if (argc < 3)
-		errmsg_exit1("Usage: %s file length [offset [aligment]]\n", argv[0]);
+		errmsg_exit1("Usage: %s file length [offset [aligment]]\n",
+			argv[0]);
 
 	len = getlong(argv[2], GN_ANY_BASE);
 	offset = argc > 3 ? getlong(argv[3], GN_ANY_BASE) : 0;
@@ -53,14 +54,14 @@ main(int argc, char *argv[])
 
 	/*
 	 * The aligned_alloc() function allocates size bytes of memory such that
-     * the allocation's base address is a multiple of alignment. The requested
-     * alignment must be a power of 2. Behavior is undefined if size is not an
-     * integral multiple of alignment.
+	 * the allocation's base address is a multiple of alignment. The
+	 * requested alignment must be a power of 2. Behavior is undefined if
+	 * size is not an integral multiple of alignment.
 	 *
-	 * we ensure that 'buf' is aligned on an odd multiple of
-     * 'alignment'. We do this to ensure that if, for example, we ask
-     * for a 256-byte aligned buffer, we don't accidentally get
-     * a buffer that is also aligned on a 512-byte boundary. 
+	 * we ensure that 'buf' is aligned on an odd multiple of 'alignment'.
+	 * We do this to ensure that if, for example, we ask for a 256-byte
+	 * aligned buffer, we don't accidentally get a buffer that is also
+	 * aligned on a 512-byte boundary. 
 	 */
 	buf = (char *)aligned_alloc(alig * 2, len + alig);
 	if (buf == NULL)

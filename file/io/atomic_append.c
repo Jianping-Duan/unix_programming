@@ -42,13 +42,15 @@ main(int argc, char *argv[])
 
 	if (argc < 3) {
 		fprintf(stderr, "Usage: %s <file> <bytes> [x]\n", argv[0]);
-		fprintf(stderr, "\t'x' means use lseek() instend of O_APPEND.\n");
+		fprintf(stderr, "\t'x' means use lseek() instend of "
+			"O_APPEND.\n");
 		exit(EXIT_FAILURE);
 	}
 	
 	uselseek = argc > 3;
 	flags = uselseek ? 0 : O_APPEND;
-	if ((fd = open(argv[1], O_RDWR | O_CREAT | flags, S_IRUSR | S_IWUSR)) == -1)
+	fd = open(argv[1], O_RDWR | O_CREAT | flags, S_IRUSR | S_IWUSR);
+	if (fd == -1)
 		errmsg_exit1("open file %s error, %s.\n", argv[1], ERR_MSG);
 
 	bytes = getlong(argv[2], GN_ANY_BASE);

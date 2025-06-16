@@ -30,7 +30,7 @@
  *
  */
 #include "unibsd.h"
-#include <libgen.h>		/* dirname(), basename(); more details see man(3) */
+#include <libgen.h>	/* dirname(), basename(); more details see man(3) */
 
 int
 main(int argc, char *argv[])
@@ -47,7 +47,8 @@ main(int argc, char *argv[])
 		if ((s2 = strdup(argv[i])) == NULL)
 			errmsg_exit1("strdup failed, %s\n", ERR_MSG);
 
-		printf("'%s' ==> '%s' + '%s'\n", argv[i], dirname(s1), basename(s2));
+		printf("'%s' ==> '%s' + '%s'\n", argv[i], dirname(s1),
+			basename(s2));
 
 		xfree(s1);
 		xfree(s2);

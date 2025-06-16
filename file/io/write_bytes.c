@@ -52,41 +52,43 @@ main(int argc, char *argv[])
 		usage_info(argv[0]);
 	while ((op = getopt(argc, argv, optstr)) != -1) {
 		switch (op) {
-			case 'f':
-				fname = optarg;
-				break;
-			case 'b':
-				if (sscanf(optarg, "%d", &bytes) != 1)
-					errmsg_exit1("Illegal number. -b %s\n", optarg);
-				if (bytes <= 0)
-					errmsg_exit1("Must be greater than 0, %s\n", optarg);
-				break;
-			case 's':
-				if (sscanf(optarg, "%d", &sz) != 1)
-					errmsg_exit1("Illegal number. -s %s\n", optarg);
-				if (sz <= 0)
-					errmsg_exit1("Must be greater than 0, %s\n", optarg);
-				break;
-			case 'S':
-				if (sscanf(optarg, "%d", &osync) != 1)
-					errmsg_exit1("Illegal number. -S %s\n", optarg);
-				if (osync != 0 && osync != 1)
-					errmsg_exit1("Illegal number. -S %s\n", optarg);
-				break;
-			case 'F':
-				if (sscanf(optarg, "%d", &fun) != 1)
-					errmsg_exit1("Illegal number. -F %s\n", optarg);
-				switch (fun) {
-					case 0:
-					case 1:
-					case 2:
-						break;
-					default:
-						errmsg_exit1("Illegal number. -F %s\n", optarg);
-				}
+		case 'f':
+			fname = optarg;
+			break;
+		case 'b':
+			if (sscanf(optarg, "%d", &bytes) != 1)
+				errmsg_exit1("Illegal number. -b %s\n", optarg);
+			if (bytes <= 0)
+				errmsg_exit1("Must be greater than 0, %s\n",
+					optarg);
+			break;
+		case 's':
+			if (sscanf(optarg, "%d", &sz) != 1)
+				errmsg_exit1("Illegal number. -s %s\n", optarg);
+			if (sz <= 0)
+				errmsg_exit1("Must be greater than 0, %s\n",
+					optarg);
+			break;
+		case 'S':
+			if (sscanf(optarg, "%d", &osync) != 1)
+				errmsg_exit1("Illegal number. -S %s\n", optarg);
+			if (osync != 0 && osync != 1)
+				errmsg_exit1("Illegal number. -S %s\n", optarg);
+			break;
+		case 'F':
+			if (sscanf(optarg, "%d", &fun) != 1)
+				errmsg_exit1("Illegal number. -F %s\n", optarg);
+			switch (fun) {
+			case 0:
+			case 1:
+			case 2:
 				break;
 			default:
-				fprintf(stderr, "Parameters error, %c\n", op);
+				errmsg_exit1("Illegal number. -F %s\n", optarg);
+			}
+			break;
+		default:
+			fprintf(stderr, "Parameters error, %c\n", op);
 				usage_info(argv[0]);
 		}
 	}
@@ -109,20 +111,21 @@ main(int argc, char *argv[])
 
 		/* 
 		 * if perform an fdatasync() after each write,
-		 * so that data--and possibly metadata--changes are flushed to the disk.
+		 * so that data--and possibly metadata--changes are flushed to
+		 * the disk.
 		 *
 		 * if perform an fsync() after each write,
 		 * so that data and metadata are flushed to the disk.
 		 */
 		switch (fun) {
-			case 1:
-				if (fsync(fd) == -1)
-					errmsg_exit1("fsync error, %s.\n", ERR_MSG);
-				break;
-			case 2:
-				if (fdatasync(fd) == -1)
-					errmsg_exit1("fdatasync error, %s.\n", ERR_MSG);
-				break;
+		case 1:
+			if (fsync(fd) == -1)
+				errmsg_exit1("fsync error, %s.\n", ERR_MSG);
+			break;
+		case 2:
+			if (fdatasync(fd) == -1)
+				errmsg_exit1("fdatasync error, %s.\n", ERR_MSG);
+			break;
 		}
 		nwr += cwr;
 	}

@@ -66,26 +66,35 @@ display_statinfo(const struct stat *st)
 {
 	printf("File type:\t\t\t");
 	switch (st->st_mode & S_IFMT) {
-		case S_IFREG: printf("regular file.\n");
-			break;
-		case S_IFDIR: printf("directory.\n");
-			break;
-		case S_IFCHR: printf("character device.\n");
-			break;
-		case S_IFBLK: printf("block device.\n");
-			break;
-		case S_IFLNK: printf("symbol (soft) link.\n");
-			break;
-		case S_IFIFO: printf("FIFO or pipe.\n");
-			break;
-		case S_IFSOCK: printf("socket.\n");
-		default: printf("unknown file type.\n");
+	case S_IFREG:
+		printf("regular file.\n");
+		break;
+	case S_IFDIR:
+		printf("directory.\n");
+		break;
+	case S_IFCHR:
+		printf("character device.\n");
+		break;
+	case S_IFBLK:
+		printf("block device.\n");
+		break;
+	case S_IFLNK:
+		printf("symbol (soft) link.\n");
+		break;
+	case S_IFIFO:
+		printf("FIFO or pipe.\n");
+		break;
+	case S_IFSOCK:
+		printf("socket.\n");
+	default:
+		printf("unknown file type.\n");
 	}
 
 	printf("Dvice containing i-node:\tmajor = %d, minor = %d\n",
 		major(st->st_dev), minor(st->st_dev));
 	printf("I-node number:\t\t\t%lu\n", st->st_ino);
-	printf("Mode:\t\t\t\t%d (%s)\n", st->st_mode, file_perms(st->st_mode, 0));
+	printf("Mode:\t\t\t\t%d (%s)\n", st->st_mode,
+		file_perms(st->st_mode, 0));
 
 	if (st->st_mode & (S_ISUID | S_ISGID | S_ISVTX)) {
 		printf("speical bits set:\t%s%s%s\n",
@@ -133,16 +142,22 @@ file_perms(mode_t perm, int flags)
 	sprintf(permstr, "%c%c%c%c%c%c%c%c%c",
 		(perm & S_IRUSR) ? 'r' : '-', (perm & S_IWUSR) ? 'w' : '-',
 		(perm & S_IXUSR) ? 
-			(((perm & S_ISUID) && (flags & FP_SPECIAL) ? 's' : 'x')) :
-			(((perm & S_ISUID) && (flags & FP_SPECIAL) ? 'S' : '-')),
+			(((perm & S_ISUID) && (flags & FP_SPECIAL) ?
+			's' : 'x')) :
+			(((perm & S_ISUID) && (flags & FP_SPECIAL) ?
+			'S' : '-')),
 		(perm & S_IRGRP) ? 'r' : '-', (perm & S_IWGRP) ? 'w' : '-',
 		(perm & S_IXGRP) ?
-			(((perm & S_ISGID) && (flags & FP_SPECIAL) ? 's' : 'x')) :
-			(((perm & S_ISGID) && (flags & FP_SPECIAL) ? 'S' : '-')),
+			(((perm & S_ISGID) && (flags & FP_SPECIAL) ?
+			's' : 'x')) :
+			(((perm & S_ISGID) && (flags & FP_SPECIAL) ?
+			'S' : '-')),
 		(perm & S_IROTH) ? 'r' : '-', (perm & S_IWOTH) ? 'w' : '-',
 		(perm & S_IXOTH) ?
-			(((perm & S_ISVTX) && (flags & FP_SPECIAL) ? 't' : 'x')) :
-			(((perm & S_ISVTX) && (flags & FP_SPECIAL) ? 'T' : '-'))
+			(((perm & S_ISVTX) && (flags & FP_SPECIAL) ?
+			't' : 'x')) :
+			(((perm & S_ISVTX) && (flags & FP_SPECIAL) ?
+			'T' : '-'))
 	);
 
 	return permstr;

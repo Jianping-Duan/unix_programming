@@ -70,7 +70,8 @@ lsfiles(const char *dirpath)
 		if ((dp = readdir(dirp)) == NULL)
 			break;
 
-		if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0)
+		if (strcmp(dp->d_name, ".") == 0 ||
+			strcmp(dp->d_name, "..") == 0)
 			continue;	/* skip "." and ".." */
 
 		if (!iscurdir)
