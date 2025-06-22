@@ -2,6 +2,6 @@
 
 CFLAGS_AUX = -lpthread
 TOPDIR = ../..
-EXECS = simplethrd
+EXECS = simplethrd pthrdetattr
 
 .include "$(TOPDIR)/bsdman2.mk"
