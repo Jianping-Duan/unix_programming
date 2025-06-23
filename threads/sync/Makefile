@@ -2,6 +2,6 @@
 
 CFLAGS_AUX = -lpthread
 TOPDIR = ../..
-EXECS = pthrincr pthrincrmutex
+EXECS = pthrincr pthrincrmutex pthrmultijoin
 
 .include "$(TOPDIR)/bsdman2.mk"
