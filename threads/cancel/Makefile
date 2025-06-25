@@ -2,6 +2,6 @@
 
 CFLAGS_AUX = -lpthread
 TOPDIR = ../..
-EXECS = pthrcancel
+EXECS = pthrcancel pthrcleanup
 
 .include "$(TOPDIR)/bsdman2.mk"
