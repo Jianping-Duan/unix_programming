@@ -1,3 +1,3 @@
-SUBDIRS = file signals process threads pipefifos
+SUBDIRS = file signals process threads pipefifos ipckey
 
 .include "man2dirs.mk"
