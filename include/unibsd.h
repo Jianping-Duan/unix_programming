@@ -109,7 +109,7 @@ errmsg_exit2(const char *fmt, ...)
 
 	fflush(stderr);	/* In case stderr is not line-buffered */
 
-	exit(EXIT_FAILURE);
+	_exit(EXIT_FAILURE);
 }
 
 static inline long
@@ -154,6 +154,17 @@ xmalloc(size_t sz)
 	void *ptr;
 
 	if ((ptr = malloc(sz)) == NULL)
+		errmsg_exit1("Memory allocated failure, %s\n", ERR_MSG);
+
+	return ptr;
+}
+
+static inline void *
+xcalloc(size_t numb, size_t sz)
+{
+	void *ptr;
+
+	if ((ptr = calloc(numb, sz)) == NULL)
 		errmsg_exit1("Memory allocated failure, %s\n", ERR_MSG);
 
 	return ptr;
