@@ -108,6 +108,77 @@ usage_info(const char *pname)
 	exit(EXIT_FAILURE);
 }
 
+/*
+ * The operation performed depends as follows on the value of sem_op:
+ *
+ * When sem_op is positive and the process has alter permission, the semaphore's
+ * value is incremented by sem_op's value. If SEM_UNDO is specified, the
+ * semaphore's adjust on exit value is decremented by sem_op's value. A positive
+ * value for sem_op generally corresponds to a process releasing a resource
+ * associated with the semaphore.
+ *
+ * The behavior when sem_op is negative and the process has alter permission,
+ * depends on the current value of the semaphore:
+ *
+ *	If the current value of the semaphore is greater than or equal to the
+ *	absolute value of sem_op, then the value is decremented by the absolute
+ *	value of sem_op. If SEM_UNDO is specified, the semaphore's adjust on
+ *	exit value is incremented by the absolute value of sem_op.
+ *
+ *	If the current value of the semaphore is less than the absolute value
+ *	of sem_op, one of the following happens:
+ *
+ *		If IPC_NOWAIT was specified, then semop() returns immediately
+ *		with a return value of EAGAIN.
+ *
+ *		Otherwise, the calling process is put to sleep until one of the
+ *		following conditions is satisfied:
+ *
+ *			Some other process removes the semaphore with the
+ *			IPC_RMID option of semctl(2). In this case, semop()
+ *			returns immediately with a return value of EIDRM.
+ *
+ *			The process receives a signal that is to be caught. In
+ *			this case, the process will resume execution as defined
+ *			by sigaction(2).
+ *
+ *			The semaphore's value is greater than or equal to the
+ *			absolute value of sem_op. When this condition becomes
+ *			true, the semaphore's value is decremented by the
+ *			absolute value of sem_op, the semaphore's adjust on exit
+ *			value is incremented by the absolute value of sem_op.
+ *
+ *	A negative value for sem_op generally means that a process is waiting
+ *	for a resource to become available.
+ *
+ * When sem_op is zero and the process has read permission, one of the following
+ * will occur:
+ *
+ *	If the current value of the semaphore is equal to zero then semop() can
+ *	return immediately.
+ *
+ *	If IPC_NOWAIT was specified, then semop() returns immediately with a
+ *	return value of EAGAIN.
+ *
+ *	Otherwise, the calling process is put to sleep until one of the
+ *	following conditions is satisfied:
+ *
+ *		Some other process removes the semaphore with the IPC_RMID
+ *		option of semctl(2). In this case, semop() returns immediately
+ *		with a return value of EIDRM.
+ *
+ *		The process receives a signal that is to be caught. In this
+ *		case, the process will resume execution as defined by
+ *		sigaction(2).
+ *
+ *		The semaphore's value becomes zero.
+ *
+ * For each semaphore a process has in use, the kernel maintains an “adjust on
+ * exit” value, as alluded to earlier. When a process exits, either voluntarily
+ * or involuntarily, the adjust on exit value for each semaphore is added to
+ * the semaphore's value. This can be used to ensure that a resource is released
+ * if a process terminates unexpectedly.
+ */
 static int
 parseops(const char *arg, struct sembuf *sops)
 {
