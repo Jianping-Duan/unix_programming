@@ -35,6 +35,6 @@
 #include <sys/un.h>
 #include <sys/socket.h>
 
-#define SVR_SOCK_PATH	"/tmp/sockun_tsfr"
+#define SVR_SOCK_PATH	"/tmp/sockud_tsfr"
 
 #endif	/* !_SOCKUD_TSFR_H_ */
