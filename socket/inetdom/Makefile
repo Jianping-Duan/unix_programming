@@ -1,6 +1,7 @@
 # DEBUG = -O0 -g
 
 TOPDIR = ../..
-EXECS = sockid_ucase_svr sockid_ucase_clt sockid_seqnum_svr sockid_seqnum_clt
+EXECS = sockid_ucase_svr sockid_ucase_clt sockid_seqnum_svr sockid_seqnum_clt \
+	sockid_gethost
 
 .include "$(TOPDIR)/bsdman2.mk"
