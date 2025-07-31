@@ -9,7 +9,7 @@ INCLUDE_PATH = -I $(TOPDIR)/include
 BINARY_PATH = $(TOPDIR)/bin
 
 .PHONY: all
-all: $(SLIBS) $(EXECS)
+all: $(EXECS)
 
 $(EXECS): $(.PREFIX).c
 	$(CC) $(.ALLSRC) -o $(BINARY_PATH)/$(.TARGET) $(CFLAGS) $(INCLUDE_PATH)
