@@ -38,7 +38,7 @@ int
 main(int argc, char *argv[])
 {
 	const char *port = DFT_PORT_NUM;
-	int opt, seqnum = 0, sfd, cfd, optval = 1, reqnum, resplen;
+	int opt, seqnum = 0, sfd, cfd, optval = 1, reqnum, resplen, ercode;
 	struct addrinfo hints, *res, *rp;
 	struct sockaddr_storage caddr;
 	socklen_t len = sizeof(caddr);
@@ -164,8 +164,8 @@ main(int argc, char *argv[])
 	hints.ai_family = AF_INET;		/* Only allows IPv4 */
 	hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV;	/* Wildcard IP address;
 						service name is numeric */
-	if (getaddrinfo(NULL, port, &hints, &res) != 0)
-		errmsg_exit1("getaddrinfo failed, %s\n", gai_strerror(errno));
+	if ((ercode = getaddrinfo(NULL, port, &hints, &res)) != 0)
+		errmsg_exit1("getaddrinfo failed, %s\n", gai_strerror(ercode));
 
 	/*
 	 * Walk through returned list until we find an address structure that
