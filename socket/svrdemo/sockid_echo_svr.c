@@ -72,7 +72,7 @@ main(int argc, char *argv[])
 	while (1) {
 		if ((cfd = accept(sfd, (struct sockaddr *)&addr, &len)) == -1) {
 			syslog(LOGLVL, "accept failed, %s", ERR_MSG);
-			continue;
+			exit(EXIT_FAILURE);
 		}
 
 		idtcp4_addrstr((struct sockaddr *)&addr, len, addrstr);
