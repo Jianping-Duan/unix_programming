@@ -15,6 +15,6 @@ Source RoadMap:
 --------------------------------------------------------------------------------
 |   Directory     |         Description         |
 |-----------------|-----------------------------|
-| file            | Several operations of files on unix, including Attribute,
-IO, Directory and Lock |
+| file            | Several operations of files on unix, including Attribute, IO, Directory and Lock |
 | signals         | signal processing in unix operation system |
+| process         | unix process, including create, daemon, execution, groups, sessions, job control, monitor, priority and schedule, resource, termination |
