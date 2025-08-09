@@ -16,8 +16,8 @@ Source RoadMap:
 |   Directory     |         Description         |
 |-----------------|-----------------------------|
 | include         | Encapsulated common header file |
-| file            | Several operations of files on unix, includes Attribute, \
-IO, Directory and Lock |
+| file            | Several operations of files on unix, includes Attribute, IO,
+    Directory and Lock |
 | signals         | signal processing in unix operation system |
 | process         | unix process, includes create, daemon, execution, groups, sessions, job control, monitor, priority and schedule, resource, termination |
 | threads         | POSIX threads, includes basic operation, cancel, safety and synchronization |
