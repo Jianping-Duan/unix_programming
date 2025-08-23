@@ -26,3 +26,5 @@ Source RoadMap:
 | semaphore       | UNIX semaphore, includes SYSV and POSIX |
 | shmem           | Shared memory, includes SYSV and POSIX |
 | socket          | unix domain socket, internet domain socket, server design demo |
+| advio           | select, poll and kqueue/kevent |
+| terminals       | Several functions related to the terminal |
