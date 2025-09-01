@@ -5,6 +5,6 @@ CFLAGS_AUX = -lrt -lpthread
 
 TOPDIR = ..
 EXECS = real_timer timer_read nanosleep posixtmr_sigevsig posixtmr_sigevthr \
-	timerfd
+	timerfd clock_nanosleep
 
 .include "$(TOPDIR)/bsdman2.mk"
