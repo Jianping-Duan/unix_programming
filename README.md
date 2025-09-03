@@ -28,3 +28,5 @@ Source RoadMap:
 | socket          | unix domain socket, internet domain socket, server design demo |
 | advio           | Advance IO, includes select, poll and kqueue/kevent |
 | terminals       | Several functions related to the terminal |
+| time            | including most of time funcitons |
+| tmrslp          | timer and sleep |
