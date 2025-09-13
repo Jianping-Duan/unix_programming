@@ -107,6 +107,12 @@ main(int argc, char *argv[])
 	 * If timeout is not a null pointer, it specifies the maximum interval
 	 * to wait for the selection to complete. System activity can lengthen
 	 * the interval by an indeterminate amount.
+	 *
+	 * The select() system call returns the number of ready descriptors that
+	 * are contained in the descriptor sets, or -1 if an error occurred. If
+	 * the time limit expires, select() returns 0. If select() returns with
+	 * an error, including one due to an interrupted system call, the
+	 * descriptor sets will be unmodified.
 	 */
 	if ((ready = select(nfds, &rdfds, &wrfds, NULL, pto)) == -1)
 		errmsg_exit1("select failed, %s\n", ERR_MSG);
