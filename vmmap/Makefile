@@ -1,5 +1,5 @@
 # DEBUG = -O0 -g
 TOPDIR = ..
-EXECS = mmcat
+EXECS = mmcat mmap
 
 .include "$(TOPDIR)/bsdman2.mk"
