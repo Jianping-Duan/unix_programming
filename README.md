@@ -30,3 +30,4 @@ Source RoadMap:
 | terminals       | Several functions related to the terminal |
 | time            | including most of time funcitons |
 | tmrslp          | timer and sleep |
+| vmmap           | Virtual memory and memery mapping |
