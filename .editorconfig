@@ -2,7 +2,7 @@
 
 root = true
 
-[*.{c,h,mk}]
+[{*.{awk,c,dts,dtsi,dtso,h,mk,s,S},Kconfig,Makefile,Makefile.*}]
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
