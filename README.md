@@ -1,33 +1,45 @@
-UNIX Programming cases based on FreeBSD environment
---------------------------------------------------------------------------------
+# UNIX Programming in C
 
-The project takes the FreeBSD operating system as an example to describe
-programming based on the unix environment in the form of programming cases.
+A collection of UNIX system programming examples implemented in C, using FreeBSD as the primary development environment. The project covers file operations, process management, signals, threads, interprocess communication, network programming, I/O multiplexing, and virtual memory.
 
-For the consideration of readability, the submodules in the project are divided
-by several system calls of unix, and each .c source file in the project will
-generate a corresponding executable file after compilation. 
+## Overview
 
-The system call function or library function used in the source file can be used
-to view the introduction of the function using man(2) or man(3).
+This project provides practical examples of UNIX system programming, with an emphasis on system calls and library functions commonly used in C programs.
 
-Source RoadMap:
---------------------------------------------------------------------------------
-|   Directory     |         Description         |
-|-----------------|-----------------------------|
-| include         | Encapsulated common header file |
-| file            | Several operations of files on unix, includes Attribute, IO, Directory and Lock |
-| signals         | signal processing in unix operation system |
-| process         | unix process, includes create, daemon, execution, groups, sessions, job control, monitor, priority and schedule, resource, termination |
-| threads         | POSIX threads, includes basic operation, cancel, safety and synchronization |
-| pipefifo        | pipe and FIFO |
-| ipckey          | create a ipc key for SYSV |
-| msgqueue        | Message Queue, includes SYSV and POSIX |
-| semaphore       | UNIX semaphore, includes SYSV and POSIX |
-| shmem           | Shared memory, includes SYSV and POSIX |
-| socket          | unix domain socket, internet domain socket, server design demo |
-| advio           | Advance IO, includes select, poll and kqueue/kevent |
-| terminals       | Several functions related to the terminal |
-| time            | including most of time funcitons |
-| tmrslp          | timer and sleep |
-| vmmap           | Virtual memory and memery mapping |
+The source code is organized into modules based on related system programming topics and interfaces. Each C source file is designed to be compiled into a separate executable, making it easier to examine individual examples and understand how specific system calls and library functions are used.
+
+The examples cover a broad range of UNIX programming topics, from file and process management to threads, interprocess communication, sockets, and advanced I/O. The corresponding function documentation can be consulted through the `man(2)` and `man(3)` manual sections, where applicable.
+
+## Source Roadmap
+
+| Directory | Description |
+| --- | --- |
+| `include` | Common header files and shared definitions |
+| `file` | File operations, including file attributes, I/O, directories, and file locking |
+| `signals` | Signal handling |
+| `process` | Process creation, execution, termination, daemon processes, process groups, sessions, job control, monitoring, priorities, scheduling, and resource management |
+| `threads` | POSIX threads, including basic operations, cancellation, thread safety, and synchronization |
+| `pipefifos` | Pipes and FIFOs |
+| `ipckey` | System V IPC key generation |
+| `msgqueue` | System V and POSIX message queues |
+| `semaphore` | System V and POSIX semaphores |
+| `shmem` | System V and POSIX shared memory |
+| `socket` | UNIX domain sockets, Internet domain sockets, and server programming examples |
+| `advio` | Advanced I/O, including `select`, `poll`, and `kqueue`/`kevent` |
+| `terminals` | Terminal-related functions and operations |
+| `time` | Time-related functions |
+| `tmrslp` | Timers and sleep functions |
+| `vmmap` | Virtual memory and memory mapping |
+| `bin` | Executable files generated during compilation |
+
+## Build and Platforms
+
+FreeBSD is the primary development and testing environment for this project. Most of the code examples have also been tested successfully on Linux.
+
+The project uses Makefiles to organize compilation, with individual C source files generating corresponding executables.
+
+Some examples use interfaces or behaviors specific to FreeBSD or other UNIX-like systems. Depending on the target platform, certain source files or build rules may require adjustments.
+
+## License
+
+This project is licensed under the BSD 3-Clause License. See [LICENSE](LICENSE) for details.
